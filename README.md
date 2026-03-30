@@ -46,14 +46,9 @@ Live Dashboard: A web interface displaying real-time charts (vibration frequency
 
 Hardware: ESP32, C++/Arduino IDE.
 
-Frontend: Three.js (3D Rendering), React/Plain JS, Chart.js or D3.js (Dashboards).
+Frontend: Three.js (3D Rendering
 
-Backend/IoT: [Your IoT Platform], WebSockets (for real-time data flow).
+IoT: Consentium IoT
 
 Algorithms: Predictive Maintenance (Regression or Threshold-based analysis).
 
-
-
-Developed for [Your Event/College Fest, e.g., DAKSHH'26].
-
-Would you like me to help you write the specific JavaScript logic for how the Three.js model should move when it receives the accelerometer data?
