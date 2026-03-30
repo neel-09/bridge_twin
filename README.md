@@ -13,7 +13,6 @@ The system monitors the structural integrity of a 3D-printed bridge model in rea
 🛠️ System Architecture
 
 
-
 The project is divided into three primary layers:
 
 1. Hardware Layer (The "Nervous System")
