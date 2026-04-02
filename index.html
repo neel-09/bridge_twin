@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Bridge Digital Twin</title>
-<link rel="stylesheet" href="css/style.css"/>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bridge Digital Twin</title>
+  <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
 
@@ -34,11 +34,12 @@
     <div class="err-msg">Make sure your folder looks like this and the server is running:</div>
     <div class="err-code">
       bridge_twin/<br>
-      &nbsp;&nbsp;├── bridge.glb &nbsp;&larr; exported from Blender<br>
+      &nbsp;&nbsp;├── bridge.glb<br>
       &nbsp;&nbsp;├── index.html<br>
       &nbsp;&nbsp;├── server.py<br>
       &nbsp;&nbsp;├── css/style.css<br>
       &nbsp;&nbsp;└── js/<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── config.js<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── main.js<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── loader.js<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── deformation.js<br>
@@ -47,39 +48,46 @@
       Run: &nbsp;&nbsp;python server.py<br>
       Open: &nbsp;http://localhost:8000
     </div>
-    <div class="err-msg" id="err-detail" style="color:var(--danger);font-size:10px;margin-top:4px"></div>
+    <div class="err-msg" id="err-detail"
+         style="color:var(--danger);font-size:10px;margin-top:4px"></div>
   </div>
 
-  <!-- Sensor pins -->
-  <div class="sensor-pin hud" id="pin-s1" style="left:28%;top:52%">
+  <!-- Sensor HUD pins — 3 sensors matching CONFIG.SENSORS -->
+  <!-- S1: strain gauge, left quarter-span -->
+  <div class="sensor-pin hud" id="pin-S1" style="left:28%;top:52%">
     <div class="pin-ring"><div class="pin-dot"></div></div>
     <div class="pin-label">S1</div>
   </div>
-  <div class="sensor-pin hud" id="pin-s2" style="left:50%;top:48%">
-    <div class="pin-ring" style="border-color:var(--warn);background:rgba(255,179,0,0.08)">
+  <!-- S2: accelerometer, mid-span (highlighted — highest deflection) -->
+  <div class="sensor-pin hud" id="pin-S2" style="left:50%;top:48%">
+    <div class="pin-ring"
+         style="border-color:var(--warn);background:rgba(255,179,0,0.08)">
       <div class="pin-dot" style="background:var(--warn)"></div>
     </div>
     <div class="pin-label" style="color:var(--warn)">S2</div>
   </div>
-  <div class="sensor-pin hud" id="pin-s3" style="left:72%;top:52%">
+  <!-- S3: strain gauge, right quarter-span -->
+  <div class="sensor-pin hud" id="pin-S3" style="left:72%;top:52%">
     <div class="pin-ring"><div class="pin-dot"></div></div>
     <div class="pin-label">S3</div>
   </div>
-  <div class="sensor-pin hud" id="pin-s4" style="left:50%;top:58%">
-    <div class="pin-ring"><div class="pin-dot"></div></div>
-    <div class="pin-label">S4</div>
-  </div>
 
-  <!-- HUD -->
+  <!-- HUD overlays -->
   <div class="hud hud-tl">
     <div class="hud-label">Max deflection</div>
     <div class="hud-value" id="hud-defl">0.00 <span class="hud-unit">mm</span></div>
   </div>
   <div class="hud hud-bl">
     <div class="legend">
-      <div class="legend-item"><div class="legend-dot" style="background:#00e676"></div>Safe</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#ffb300"></div>Warning</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#ff3d3d"></div>Critical</div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#00e676"></div>Safe
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#ffb300"></div>Warning
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#ff3d3d"></div>Critical
+      </div>
     </div>
   </div>
 </div>
@@ -88,21 +96,25 @@
   <!-- Alert -->
   <div class="alert-box" id="alert-box">
     <div class="alert-title">⚠ Crack risk detected</div>
-    <div class="alert-msg" id="alert-msg">High stress at S2. Anomalous frequency shift detected.</div>
+    <div class="alert-msg" id="alert-msg">Elevated stress detected. Check sensor readings.</div>
   </div>
 
   <!-- Model info -->
   <div>
     <div class="panel-title">Model info</div>
-    <div class="info-row"><span class="info-key">Source</span><span class="info-val" id="info-src">—</span></div>
-    <div class="info-row"><span class="info-key">Vertices</span><span class="info-val" id="info-verts">—</span></div>
-    <div class="info-row"><span class="info-key">Objects</span><span class="info-val" id="info-objs">—</span></div>
-    <div class="info-row"><span class="info-key">Scale</span><span class="info-val" id="info-scale">—</span></div>
+    <div class="info-row"><span class="info-key">Source</span>
+                          <span class="info-val" id="info-src">—</span></div>
+    <div class="info-row"><span class="info-key">Vertices</span>
+                          <span class="info-val" id="info-verts">—</span></div>
+    <div class="info-row"><span class="info-key">Objects</span>
+                          <span class="info-val" id="info-objs">—</span></div>
+    <div class="info-row"><span class="info-key">Scale</span>
+                          <span class="info-val" id="info-scale">—</span></div>
   </div>
 
   <div class="divider"></div>
 
-  <!-- Sensor readings -->
+  <!-- Sensor readings (cards built dynamically by ui.js) -->
   <div>
     <div class="panel-title">Sensor readings</div>
     <div id="sensor-cards"></div>
@@ -126,22 +138,26 @@
     <div class="panel-title">Simulation controls</div>
     <div class="ctrl-row">
       <div>
-        <div class="ctrl-label"><span>Vibration amplitude</span><span id="amp-val">1.0×</span></div>
+        <div class="ctrl-label">
+          <span>Vibration amplitude</span><span id="amp-val">1.0×</span>
+        </div>
         <input type="range" id="amp-slider" min="0" max="10" value="1" step="0.5">
       </div>
       <div>
-        <div class="ctrl-label"><span>Crack risk level</span><span id="risk-val">0%</span></div>
+        <div class="ctrl-label">
+          <span>Crack risk level</span><span id="risk-val">0%</span>
+        </div>
         <input type="range" id="risk-slider" min="0" max="100" value="0">
       </div>
     </div>
     <div class="btn-row" style="margin-top:10px">
       <button class="btn active" id="btn-mode1" onclick="setMode(1)">Mode 1</button>
-      <button class="btn" id="btn-mode2" onclick="setMode(2)">Mode 2</button>
-      <button class="btn" id="btn-mode3" onclick="setMode(3)">Mode 3</button>
+      <button class="btn"        id="btn-mode2" onclick="setMode(2)">Mode 2</button>
+      <button class="btn"        id="btn-mode3" onclick="setMode(3)">Mode 3</button>
     </div>
     <div class="btn-row" style="margin-top:6px">
       <button class="btn danger-btn" onclick="simulateCrack()">Simulate crack</button>
-      <button class="btn" onclick="resetSim()">Reset</button>
+      <button class="btn"            onclick="resetSim()">Reset</button>
     </div>
   </div>
 </aside>
@@ -151,12 +167,13 @@
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
-<!-- Our modules — ORDER MATTERS -->
-<script src="js/sensors.js"></script>
-<script src="js/deformation.js"></script>
-<script src="js/ui.js"></script>
-<script src="js/loader.js"></script>
-<script src="js/main.js"></script>
+<!-- Project modules — ORDER IS LOAD ORDER, must be respected -->
+<script src="js/config.js"></script>      <!-- 1. constants first -->
+<script src="js/sensors.js"></script>     <!-- 2. sensor state (needs CONFIG) -->
+<script src="js/deformation.js"></script> <!-- 3. deformation (needs CONFIG) -->
+<script src="js/ui.js"></script>          <!-- 4. UI (needs sensorData, CONFIG) -->
+<script src="js/loader.js"></script>      <!-- 5. loader (needs all of above) -->
+<script src="js/main.js"></script>        <!-- 6. entry point last -->
 
 </body>
 </html>

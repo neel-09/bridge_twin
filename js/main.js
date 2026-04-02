@@ -1,11 +1,10 @@
 // main.js
-// Entry point — sets up the Three.js scene, lights, renderer,
-// orbit controls, and runs the animation loop.
-// Also owns the simulation state (currentMode, amplitude, crackRisk).
+// Entry point: scene, renderer, lights, animation loop, sim state.
+// All constants come from CONFIG — no magic numbers here.
 
 // ── SIMULATION STATE ──────────────────────────────────────
-let currentMode = 1.0;
-let amplitude   = 1.0;
+let currentMode = CONFIG.DEFAULT_MODE;
+let amplitude   = CONFIG.DEFAULT_AMPLITUDE;
 let crackRisk   = 0;
 let frameCount  = 0;
 
@@ -15,9 +14,10 @@ const renderer = new THREE.WebGLRenderer({
   canvas:    document.getElementById('three-canvas'),
   antialias: true,
 });
-renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // cap at 2× for perf
 renderer.setClearColor(0x070a0f, 1);
 renderer.shadowMap.enabled = true;
+renderer.shadowMap.type    = THREE.PCFSoftShadowMap;
 
 // ── SCENE ─────────────────────────────────────────────────
 const scene = new THREE.Scene();
@@ -28,19 +28,20 @@ const camera = new THREE.PerspectiveCamera(45, 1, 0.001, 200);
 camera.position.set(0, 0.5, 1.2);
 
 // ── ORBIT CONTROLS ────────────────────────────────────────
-const controls          = new THREE.OrbitControls(camera, renderer.domElement);
-controls.enableDamping  = true;
-controls.dampingFactor  = 0.08;
-controls.minDistance    = 0.2;
-controls.maxDistance    = 10;
-controls.target.set(0, 0, 0);
+const controls         = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.minDistance   = 0.2;
+controls.maxDistance   = 10;
 
 // ── LIGHTING ──────────────────────────────────────────────
 scene.add(new THREE.AmbientLight(0x223344, 2.5));
 
 const dirLight = new THREE.DirectionalLight(0x00d4ff, 1.5);
 dirLight.position.set(3, 5, 3);
-dirLight.castShadow = true;
+dirLight.castShadow            = true;
+dirLight.shadow.mapSize.width  = 1024;
+dirLight.shadow.mapSize.height = 1024;
 scene.add(dirLight);
 
 const rimLight = new THREE.DirectionalLight(0x334466, 1.0);
@@ -52,29 +53,26 @@ fillLight.position.set(0, -2, 0);
 scene.add(fillLight);
 
 // ── GRID ──────────────────────────────────────────────────
-const grid = new THREE.GridHelper(10, 30, 0x1e2a3a, 0x111820);
-scene.add(grid);
+scene.add(new THREE.GridHelper(10, 30, 0x1e2a3a, 0x111820));
 
 // ── ANIMATION LOOP ────────────────────────────────────────
 function animate(timestamp) {
   requestAnimationFrame(animate);
   controls.update();
 
-  const maxDefl = updateDeformation(timestamp, currentMode, amplitude, crackRisk, modeFreqs);
-  updateSensorsSimulated(timestamp, currentMode, amplitude, crackRisk, modeFreqs);
+  const maxDefl = updateDeformation(timestamp, currentMode, amplitude, crackRisk);
+  updateSensorsSimulated(timestamp, currentMode, amplitude, crackRisk);
 
-  // Update UI every 6 frames (~10fps) to avoid DOM thrashing
-  if (++frameCount % 6 === 0) {
+  if (++frameCount % CONFIG.UI_UPDATE_EVERY === 0) {
     updateUI(maxDefl, currentMode, crackRisk);
   }
 
   renderer.render(scene, camera);
 }
 
-// ── RESIZE HANDLER ────────────────────────────────────────
+// ── RESIZE ────────────────────────────────────────────────
 function onResize() {
-  const w = wrap.clientWidth;
-  const h = wrap.clientHeight;
+  const w = wrap.clientWidth, h = wrap.clientHeight;
   renderer.setSize(w, h);
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
@@ -82,53 +80,52 @@ function onResize() {
 window.addEventListener('resize', onResize);
 onResize();
 
-// ── CONTROL BINDINGS ──────────────────────────────────────
-document.getElementById('amp-slider').addEventListener('input', function() {
+// ── CONTROLS ──────────────────────────────────────────────
+document.getElementById('amp-slider').addEventListener('input', function () {
   amplitude = parseFloat(this.value);
   document.getElementById('amp-val').textContent = amplitude.toFixed(1) + '×';
 });
 
-document.getElementById('risk-slider').addEventListener('input', function() {
-  crackRisk = parseInt(this.value);
+document.getElementById('risk-slider').addEventListener('input', function () {
+  crackRisk = parseInt(this.value, 10);
   document.getElementById('risk-val').textContent = crackRisk + '%';
 });
 
-// Called by Mode 1 / Mode 2 / Mode 3 buttons in index.html
+// ── MODE SELECTION ────────────────────────────────────────
 function setMode(m) {
   currentMode = m;
-  [1, 2, 3].forEach(i => {
-    document.getElementById(`btn-mode${i}`).classList.toggle('active', i === m);
-  });
+  [1, 2, 3].forEach(i =>
+    document.getElementById(`btn-mode${i}`).classList.toggle('active', i === m));
 }
 
-// Gradually ramps up crack risk to simulate a failure scenario
+// ── SIMULATE CRACK ────────────────────────────────────────
 function simulateCrack() {
   let v = crackRisk;
   const iv = setInterval(() => {
     v = Math.min(85, v + 2);
-    document.getElementById('risk-slider').value = v;
     crackRisk = v;
+    document.getElementById('risk-slider').value    = v;
     document.getElementById('risk-val').textContent = v + '%';
     if (v >= 85) clearInterval(iv);
   }, 40);
 
   amplitude = Math.min(10, amplitude + 2);
-  document.getElementById('amp-slider').value = amplitude;
-  document.getElementById('amp-val').textContent = amplitude.toFixed(1) + '×';
+  document.getElementById('amp-slider').value     = amplitude;
+  document.getElementById('amp-val').textContent  = amplitude.toFixed(1) + '×';
 }
 
-// Resets everything back to default state
+// ── RESET — uses CONFIG defaults so there's no hardcoded fallback ──
 function resetSim() {
   crackRisk   = 0;
-  amplitude   = 0.0; // Changed from 1.0
-  currentMode = 0;   // Changed from 1 (0 means no mode active)
+  amplitude   = CONFIG.DEFAULT_AMPLITUDE;
+  currentMode = CONFIG.DEFAULT_MODE;         // ← was 0, now always valid
 
-  document.getElementById('risk-slider').value     = 0;
-  document.getElementById('risk-val').textContent  = '0%';
-  document.getElementById('amp-slider').value      = 0;    // Changed from 1
-  document.getElementById('amp-val').textContent   = '0.0×'; // Changed from 1.0x
+  document.getElementById('risk-slider').value    = 0;
+  document.getElementById('risk-val').textContent = '0%';
+  document.getElementById('amp-slider').value     = amplitude;
+  document.getElementById('amp-val').textContent  = amplitude.toFixed(1) + '×';
 
-  setMode(0); // Deselects all mode buttons
+  setMode(CONFIG.DEFAULT_MODE);              // ← always sets a valid 1–3 mode
   resetDeformation();
   resetSensorData();
   document.getElementById('alert-box').classList.remove('visible');
