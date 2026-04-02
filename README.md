@@ -1,16 +1,16 @@
-🌉 Real-Time Bridge Vibration Analysis & Digital Twin
+🌉 **Real-Time Bridge Vibration Analysis & Digital Twin -**
 A comprehensive IoT-based monitoring system that creates a Digital Twin of a bridge. This project utilizes an ESP32 to capture structural health data (vibration and strain), transmits it to an IoT platform, and visualizes the results through an interactive Three.js 3D simulation and a predictive maintenance dashboard.
 
 
 
 
-🚀 Overview
+🚀 **Overview -**
 The system monitors the structural integrity of a 3D-printed bridge model in real-time. By analyzing the physical stressors, the system can predict potential failures before they occur, demonstrating the power of Industry 4.0 in infrastructure management.
 
 
 
 
-🛠️ System Architecture
+🛠️ **System Architecture -**
 
 
 The project is divided into three primary layers:
@@ -40,7 +40,7 @@ Live Dashboard: A web interface displaying real-time charts (vibration frequency
 
 
 
-💻 Tech Stack:
+💻 **Tech Stack -**
 
 
 Hardware: ESP32, C++/Arduino IDE.
