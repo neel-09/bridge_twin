@@ -7,3 +7,5 @@ faiss-cpu
 chromadb
 langchain-groq
 python-dotenv
+fastapi
+pydantic
