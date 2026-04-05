@@ -6,26 +6,33 @@ import chromadb
 from typing import List, Dict, Any
 from sentence_transformers import SentenceTransformer
 
-BRIDGE_SYSTEM_PROMPT = """You are BridgeAI, an intelligent structural health 
-monitoring assistant for a bridge digital twin system. You have access to 
-real-time and historical sensor data from three sensors:
-- S1: Strain gauge at the left quarter-span
-- S2: Accelerometer at mid-span
-- S3: Strain gauge at the right quarter-span
+# ── SYSTEM PROMPT — aligned with notebook/doc.ipynb ──────────────────────────
+# The notebook prompt is more practical: it handles bridge-specific questions
+# from live context AND general engineering questions from model knowledge.
+# The previous pipeline.py prompt was too restrictive ("context only") which
+# caused it to refuse legitimate general questions.
+BRIDGE_SYSTEM_PROMPT = """You are a BridgeAI monitoring a bridge digital twin.
 
-When asked about bridge health, always structure your response as:
-1. Current Status (Healthy / Watch / Warning / Critical)
-2. Key observations from sensor data
-3. Specific recommendation if any anomaly detected
+Here is the current live data and report context for this specific bridge:
+{context}
 
-When asked general questions, answer using the provided context.
-Use only the context provided. Do not invent information."""
+Question: {query}
+
+Instructions:
+1. If the question is about the current status, health scores, or recent 
+   reports, answer strictly using the provided context.
+2. If the question is a general engineering or just a general question 
+   regarding bridges (e.g., bridge design, hypotheticals, or physics, etc.), 
+   use your broad structural engineering knowledge to answer it.
+3. If you are combining both, clearly state what is happening on the actual 
+   bridge vs. what is a general engineering principle.
+Answer:"""
 
 
 class EmbeddingManager:
     def __init__(self, model_name: str = "all-MiniLM-L6-v2"):
         self.model_name = model_name
-        self.model = None
+        self.model      = None
         self._load_model()
 
     def _load_model(self):
@@ -46,13 +53,13 @@ class EmbeddingManager:
 class VectorStore:
     def __init__(
         self,
-        collection_name: str = "bridge_sensor_data",
+        collection_name:   str = "bridge_sensor_data",
         persist_directory: str = "./data/vector_store"
     ):
-        self.collection_name  = collection_name
+        self.collection_name   = collection_name
         self.persist_directory = persist_directory
-        self.client           = None
-        self.collection       = None
+        self.client            = None
+        self.collection        = None
         self._initialize_store()
 
     def _initialize_store(self):
@@ -67,11 +74,11 @@ class VectorStore:
 
     def add_documents(
         self,
-        texts: List[str],
+        texts:      List[str],
         embeddings: np.ndarray,
-        metadatas: List[Dict] = None
+        metadatas:  List[Dict] = None
     ):
-        if len(texts) == 0:
+        if not texts:
             return
         ids  = [f"doc_{uuid.uuid4().hex[:8]}_{i}" for i in range(len(texts))]
         meta = metadatas or [{} for _ in texts]
@@ -90,25 +97,27 @@ class VectorStore:
 
 
 class RAGRetriever:
-    def __init__(self, vector_store: VectorStore, embedding_manager: EmbeddingManager):
+    def __init__(
+        self,
+        vector_store:      VectorStore,
+        embedding_manager: EmbeddingManager
+    ):
         self.vector_store      = vector_store
         self.embedding_manager = embedding_manager
 
     def retrieve(
         self,
-        query: str,
-        top_k: int = 5,
+        query:           str,
+        top_k:           int   = 5,
         score_threshold: float = 0.0
     ) -> List[Dict[str, Any]]:
 
-        # ── CRITICAL FIX ─────────────────────────────────────────────────────
-        # ChromaDB raises an error if n_results > collection size.
-        # Always cap n_results to what is actually available.
         total = self.vector_store.count()
         if total == 0:
             return []
+
+        # Cap n_results to collection size — ChromaDB errors if you ask for more
         actual_k = min(top_k, total)
-        # ─────────────────────────────────────────────────────────────────────
 
         try:
             query_embedding = self.embedding_manager.generate_embeddings([query])[0]
@@ -153,13 +162,9 @@ def rag_query(query: str, retriever: RAGRetriever, llm, top_k: int = 5) -> Dict:
             "retrieved_count": 0
         }
 
-    prompt = f"""{BRIDGE_SYSTEM_PROMPT}
-
-Context:
-{context}
-
-Question: {query}
-Answer:"""
+    # Uses the same prompt structure as the notebook — context and query
+    # are injected via .format() exactly as the notebook does it
+    prompt = BRIDGE_SYSTEM_PROMPT.format(context=context, query=query)
 
     try:
         response = llm.invoke([prompt])
