@@ -26,6 +26,8 @@ Instructions:
    use your broad structural engineering knowledge to answer it.
 3. If you are combining both, clearly state what is happening on the actual 
    bridge vs. what is a general engineering principle.
+4. Always be concise and to the point, providing clear and actionable insights when possible.
+5. Don't make up information. If you don't know the answer based on the context and your general knowledge on bridges strictly, say you don't know. Do not attempt to fabricate an answer.
 Answer:"""
 
 
@@ -54,7 +56,7 @@ class VectorStore:
     def __init__(
         self,
         collection_name:   str = "bridge_sensor_data",
-        persist_directory: str = "./data/vector_store"
+        persist_directory: str = "../data/vector_store"
     ):
         self.collection_name   = collection_name
         self.persist_directory = persist_directory
@@ -152,15 +154,21 @@ def rag_query(query: str, retriever: RAGRetriever, llm, top_k: int = 5) -> Dict:
     results = retriever.retrieve(query, top_k=top_k, score_threshold=0.0)
     context = "\n\n".join([r["content"] for r in results]) if results else ""
 
+    # only block if context is empty AND the query seems data-specific
     if not context:
-        return {
-            "answer": (
-                "No data in the knowledge base yet. "
-                "The system is still ingesting sensor readings — "
-                "please try again in a few seconds."
-            ),
-            "retrieved_count": 0
-        }
+        # Still send to LLM but without context — it will use its own knowledge
+        prompt = BRIDGE_SYSTEM_PROMPT.format(context="No sensor data available yet.", query=query)
+        try:
+            response = llm.invoke([prompt])
+            return {
+                "answer": response.content,
+                "retrieved_count": 0
+            }
+        except Exception as e:
+            return {
+                "answer": f"LLM error: {e}",
+                "retrieved_count": 0
+            }
 
     # Uses the same prompt structure as the notebook — context and query
     # are injected via .format() exactly as the notebook does it
