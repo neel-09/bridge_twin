@@ -1,8 +1,5 @@
-// main.js
-// Entry point: scene, renderer, lights, animation loop, sim state.
-// All constants come from CONFIG — no magic numbers here.
+// js/main.js
 
-// ── SIMULATION STATE ──────────────────────────────────────
 let currentMode = CONFIG.DEFAULT_MODE;
 let amplitude   = CONFIG.DEFAULT_AMPLITUDE;
 let crackRisk   = 0;
@@ -14,7 +11,7 @@ const renderer = new THREE.WebGLRenderer({
   canvas:    document.getElementById('three-canvas'),
   antialias: true,
 });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // cap at 2× for perf
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setClearColor(0x070a0f, 1);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type    = THREE.PCFSoftShadowMap;
@@ -60,7 +57,11 @@ function animate(timestamp) {
   requestAnimationFrame(animate);
   controls.update();
 
-  const maxDefl = updateDeformation(timestamp, currentMode, amplitude, crackRisk);
+  const maxDefl = updateDeformation(
+    timestamp, currentMode, amplitude, crackRisk
+  );
+
+  // Only runs if backend has never responded
   updateSensorsSimulated(timestamp, currentMode, amplitude, crackRisk);
 
   if (++frameCount % CONFIG.UI_UPDATE_EVERY === 0) {
@@ -72,7 +73,8 @@ function animate(timestamp) {
 
 // ── RESIZE ────────────────────────────────────────────────
 function onResize() {
-  const w = wrap.clientWidth, h = wrap.clientHeight;
+  const w = wrap.clientWidth;
+  const h = wrap.clientHeight;
   renderer.setSize(w, h);
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
@@ -80,7 +82,7 @@ function onResize() {
 window.addEventListener('resize', onResize);
 onResize();
 
-// ── CONTROLS ──────────────────────────────────────────────
+// ── SLIDER CONTROLS ───────────────────────────────────────
 document.getElementById('amp-slider').addEventListener('input', function () {
   amplitude = parseFloat(this.value);
   document.getElementById('amp-val').textContent = amplitude.toFixed(1) + '×';
@@ -91,11 +93,13 @@ document.getElementById('risk-slider').addEventListener('input', function () {
   document.getElementById('risk-val').textContent = crackRisk + '%';
 });
 
-// ── MODE SELECTION ────────────────────────────────────────
+// ── MODE BUTTONS ──────────────────────────────────────────
 function setMode(m) {
   currentMode = m;
   [1, 2, 3].forEach(i =>
-    document.getElementById(`btn-mode${i}`).classList.toggle('active', i === m));
+    document.getElementById(`btn-mode${i}`)
+            .classList.toggle('active', i === m)
+  );
 }
 
 // ── SIMULATE CRACK ────────────────────────────────────────
@@ -108,30 +112,40 @@ function simulateCrack() {
     document.getElementById('risk-val').textContent = v + '%';
     if (v >= 85) clearInterval(iv);
   }, 40);
-
   amplitude = Math.min(10, amplitude + 2);
-  document.getElementById('amp-slider').value     = amplitude;
-  document.getElementById('amp-val').textContent  = amplitude.toFixed(1) + '×';
+  document.getElementById('amp-slider').value    = amplitude;
+  document.getElementById('amp-val').textContent = amplitude.toFixed(1) + '×';
 }
 
-// ── RESET — uses CONFIG defaults so there's no hardcoded fallback ──
+// ── RESET ─────────────────────────────────────────────────
 function resetSim() {
   crackRisk   = 0;
   amplitude   = CONFIG.DEFAULT_AMPLITUDE;
-  currentMode = CONFIG.DEFAULT_MODE;         // ← was 0, now always valid
-
+  currentMode = CONFIG.DEFAULT_MODE;
   document.getElementById('risk-slider').value    = 0;
   document.getElementById('risk-val').textContent = '0%';
   document.getElementById('amp-slider').value     = amplitude;
   document.getElementById('amp-val').textContent  = amplitude.toFixed(1) + '×';
-
-  setMode(CONFIG.DEFAULT_MODE);              // ← always sets a valid 1–3 mode
+  setMode(CONFIG.DEFAULT_MODE);
   resetDeformation();
   resetSensorData();
   document.getElementById('alert-box').classList.remove('visible');
 }
 
+// ── DETAIL PAGE NAVIGATION ────────────────────────────────
+// Called by sensor pin onclick handlers in index.html.
+function openDetailPage() {
+  const a = document.createElement('a');
+  a.href   = '/detail';
+  a.target = '_blank';
+  a.rel    = 'noopener noreferrer';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
 // ── INIT ──────────────────────────────────────────────────
 buildSensorCards();
 loadBridgeModel(scene, camera, controls);
+startBackendPolling();
 animate(0);

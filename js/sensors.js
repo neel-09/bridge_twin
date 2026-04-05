@@ -1,55 +1,87 @@
-// sensors.js
-// Sensor state, simulated data generation, and live data injection.
-// ─────────────────────────────────────────────────────────────────
-// HOW TO SWITCH TO REAL IoT DATA (Consentium / WebSocket):
-//   1. Open a WebSocket connection anywhere (e.g. a new dataSource.js).
-//   2. On each message call:
-//        injectLiveSensorData({ S1: <val>, S2: <val>, S3: <val> })
-//   3. Nothing else in the codebase needs editing.
+// js/sensors.js
 
-// Initialise from CONFIG — adding/removing a sensor only requires
-// editing CONFIG.SENSORS, not this file.
 const sensorData = CONFIG.SENSORS.map(cfg => ({
   ...cfg,
-  vals: [],   // rolling history of amplitude readings
-  risk: 0,    // computed crack-risk percentage (0–100)
-  peak: 0,    // maximum absolute reading seen this session
+  vals: [],
+  risk: 0,
+  peak: 0,
 }));
 
-let usingLiveData = false;
+// Once true, the local per-frame JS simulation is permanently disabled.
+// Backend polling exclusively drives the sensor values.
+let _backendConnected = false;
+let _latestSnapshot   = null;
 
-// ── SIMULATED UPDATE ──────────────────────────────────────
-// Called every animation frame when no real sensor is connected.
+// ── BACKEND POLLING ───────────────────────────────────────
+// Called once from main.js init, then repeats every 7 seconds.
+async function startBackendPolling() {
+  console.log('[sensors] Starting backend polling...');
+  await _fetchFromBackend();            // immediate first fetch
+  setInterval(_fetchFromBackend, 7000); // then every 7 seconds
+}
+
+async function _fetchFromBackend() {
+  try {
+    const res = await fetch('/api/sensor-snapshot');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+
+    if (json.status === 'ok' && json.data) {
+      _latestSnapshot   = json.data;
+      _backendConnected = true;   // ← disables JS simulation permanently
+
+      // Push each sensor's value into its rolling history
+      sensorData.forEach(s => {
+        const reading = json.data[s.id];
+        if (reading !== undefined) {
+          _pushValue(s, reading.value);
+          s.risk = reading.risk;
+          s.peak = Math.max(...s.vals.map(Math.abs));
+        }
+      });
+
+      // Update header status indicator
+      const isLive = json.data.source === 'live';
+      const dot    = document.getElementById('status-dot');
+      const txt    = document.getElementById('status-text');
+      if (dot && txt) {
+        dot.style.background = isLive ? 'var(--safe)' : 'var(--accent)';
+        dot.style.boxShadow  = isLive
+          ? '0 0 6px var(--safe)' : '0 0 6px var(--accent)';
+        txt.textContent = isLive
+          ? 'LIVE — CONSENTIUM IoT' : 'LIVE — SIMULATED DATA';
+      }
+
+      console.log(`[sensors] Poll received. Source: ${json.data.source} | `
+        + `S1=${json.data.S1.value.toFixed(4)} `
+        + `S2=${json.data.S2.value.toFixed(4)} `
+        + `S3=${json.data.S3.value.toFixed(4)}`);
+    }
+  } catch (err) {
+    // Backend unreachable — local JS simulation keeps running as fallback
+    console.warn('[sensors] Backend poll failed:', err.message);
+  }
+}
+
+// ── LOCAL SIMULATION FALLBACK ─────────────────────────────
+// Runs ONLY when _backendConnected is false (i.e. backend never responded).
+// Called every animation frame from main.js.
 function updateSensorsSimulated(timestamp, mode, amplitude, crackRisk) {
-  if (usingLiveData) return;
+  if (_backendConnected) return;  // backend is live — do absolutely nothing
   if (mode < 1 || mode > CONFIG.MODE_FREQS.length) return;
 
   const freq = CONFIG.MODE_FREQS[mode - 1];
-
   sensorData.forEach(s => {
-    const normX = (s.pos + 1) / 2;                         // -1…+1  →  0…1
+    const normX = (s.pos + 1) / 2;
     const shape = getModeShape(normX, mode);
     const noise = (Math.random() - 0.5) * 0.015;
-
-    // Strain gauges measure relative deformation; accelerometer measures g.
-    const scaleFactor = s.type === 'accelerometer' ? 0.08 : 0.05;
-    const val = shape * amplitude * scaleFactor
-              * Math.sin(2 * Math.PI * freq * timestamp * 0.001)
-              + noise;
-
+    const scale = s.type === 'accelerometer' ? 0.08 : 0.05;
+    const val   = shape * amplitude * scale
+                * Math.sin(2 * Math.PI * freq * timestamp * 0.001)
+                + noise;
     _pushValue(s, val);
     s.risk = Math.min(100, Math.abs(shape) * crackRisk * 1.2);
     s.peak = Math.max(...s.vals.map(Math.abs));
-  });
-}
-
-// ── LIVE DATA INJECTION ───────────────────────────────────
-// packet format: { S1: <number>, S2: <number>, S3: <number> }
-// Units: S1/S3 → microstrain (με); S2 → g
-function injectLiveSensorData(packet) {
-  usingLiveData = true;
-  sensorData.forEach(s => {
-    if (packet[s.id] !== undefined) _pushValue(s, packet[s.id]);
   });
 }
 
@@ -61,12 +93,10 @@ function _pushValue(sensor, val) {
 
 function resetSensorData() {
   sensorData.forEach(s => { s.vals = []; s.risk = 0; s.peak = 0; });
-  usingLiveData = false;
+  _backendConnected = false;
+  _latestSnapshot   = null;
 }
 
-// ── FEATURE EXPORT (for future ML pipeline) ───────────────
-// Returns a flat feature vector per sensor: [mean, rms, peak, risk]
-// Feed this into your predictive maintenance model.
 function getSensorFeatures() {
   return sensorData.map(s => {
     const vals = s.vals;

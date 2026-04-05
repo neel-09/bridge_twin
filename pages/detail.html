@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bridge Twin — Sensor Detail</title>
+  <link rel="stylesheet" href="/css/style.css"/>
+  <style>
+    /* Override the dashboard grid layout for this page */
+    body {
+      display: block;
+      overflow-y: auto;
+      height: auto;
+    }
+
+    .detail-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .detail-header .logo {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 15px;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+    }
+    .detail-header .logo span { color: var(--text); opacity: 0.5; }
+    .detail-header .page-label {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .back-link {
+      margin-left: auto;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--muted);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 5px 12px;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .back-link:hover { border-color: var(--accent); color: var(--accent); }
+
+    #overall-pill {
+      padding: 3px 12px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .pill-healthy  { background: rgba(0,230,118,0.12); color: #00e676; }
+    .pill-watch    { background: rgba(0,212,255,0.12); color: #00d4ff; }
+    .pill-warning  { background: rgba(255,179,0,0.12); color: #ffb300; }
+    .pill-critical { background: rgba(255,61,61,0.12); color: #ff3d3d; }
+
+    .detail-body {
+      padding: 20px 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    .d-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .d-card.full { grid-column: 1 / -1; }
+
+    .d-card-title {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .d-card-title .accent { color: var(--accent); }
+
+    /* Live stats row */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .stat-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px 10px;
+      text-align: center;
+    }
+    .stat-box .s-label {
+      font-size: 9px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+    .stat-box .s-value {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+    }
+    .stat-box .s-unit {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+    .stat-box.warn   { border-color: var(--warn); }
+    .stat-box.danger { border-color: var(--danger); }
+
+    /* Chart canvases */
+    .chart-wrap {
+      position: relative;
+      width: 100%;
+      height: 140px;
+    }
+    .chart-wrap canvas {
+      position: absolute;
+      inset: 0;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .refresh-note {
+      font-size: 9px;
+      color: var(--muted);
+    }
+
+    /* Source badge */
+    .source-badge {
+      font-size: 9px;
+      padding: 2px 7px;
+      border-radius: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .src-sim  { background: rgba(0,212,255,0.1); color: var(--accent); }
+    .src-live { background: rgba(0,230,118,0.1); color: #00e676; }
+  </style>
+</head>
+<body>
+
+<div class="detail-header">
+  <div class="logo">Bridge<span>/</span>Twin</div>
+  <div class="page-label">Sensor Detail</div>
+  <div id="overall-pill" class="pill-healthy">HEALTHY</div>
+  <span id="source-badge" class="source-badge src-sim">SIMULATED</span>
+  <span class="refresh-note">Refreshes every 7 s</span>
+  <a href="/" class="back-link">← Dashboard</a>
+</div>
+
+<div class="detail-body">
+
+  <!-- Live readings row -->
+  <div class="d-card full">
+    <div class="d-card-title">
+      Live Readings
+      <span class="accent" id="last-ts">—</span>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-box" id="box-s1">
+        <div class="s-label">S1 · Strain · L/4</div>
+        <div class="s-value" id="val-s1">—</div>
+        <div class="s-unit">με</div>
+      </div>
+      <div class="stat-box" id="box-s2">
+        <div class="s-label">S2 · Accel · Mid-span</div>
+        <div class="s-value" id="val-s2">—</div>
+        <div class="s-unit">g</div>
+      </div>
+      <div class="stat-box" id="box-s3">
+        <div class="s-label">S3 · Strain · 3L/4</div>
+        <div class="s-value" id="val-s3">—</div>
+        <div class="s-unit">με</div>
+      </div>
+      <div class="stat-box" id="box-risk">
+        <div class="s-label">Max Crack Risk</div>
+        <div class="s-value" id="val-risk">—</div>
+        <div class="s-unit">%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S1 chart -->
+  <div class="d-card">
+    <div class="d-card-title">
+      S1 — Strain (L/4 span)
+      <span class="accent" id="risk-label-s1">risk 0%</span>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="chart-s1"></canvas>
+    </div>
+  </div>
+
+  <!-- S2 chart -->
+  <div class="d-card">
+    <div class="d-card-title">
+      S2 — Accelerometer (Mid-span)
+      <span class="accent" id="risk-label-s2">risk 0%</span>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="chart-s2"></canvas>
+    </div>
+  </div>
+
+  <!-- S3 chart -->
+  <div class="d-card">
+    <div class="d-card-title">
+      S3 — Strain (3L/4 span)
+      <span class="accent" id="risk-label-s3">risk 0%</span>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="chart-s3"></canvas>
+    </div>
+  </div>
+
+  <!-- Risk trend chart -->
+  <div class="d-card">
+    <div class="d-card-title">
+      Crack Risk Trend — All Sensors
+      <span class="accent" id="risk-label-combined">max 0%</span>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="chart-risk"></canvas>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── PURE CANVAS CHART — no external libraries, no eval ───────
+
+const COLORS = {
+  S1:   { line: '#00d4ff', fill: 'rgba(0,212,255,0.10)' },
+  S2:   { line: '#00e676', fill: 'rgba(0,230,118,0.10)' },
+  S3:   { line: '#ffb300', fill: 'rgba(255,179,0,0.10)' },
+  risk: { line: '#ff3d3d', fill: 'rgba(255,61,61,0.10)' },
+};
+
+// Draws a line chart onto a canvas element.
+// data  = array of numbers
+// color = { line, fill }
+// yUnit = string shown on y-axis
+function drawLineChart(canvas, data, color, yUnit) {
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width  = rect.width  * dpr;
+  canvas.height = rect.height * dpr;
+
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const W  = rect.width;
+  const H  = rect.height;
+  const PL = 36;   // left padding (y-axis labels)
+  const PR = 8;
+  const PT = 8;
+  const PB = 22;   // bottom padding (x-axis labels)
+  const CW = W - PL - PR;
+  const CH = H - PT - PB;
+
+  ctx.clearRect(0, 0, W, H);
+
+  if (!data || data.length < 2) {
+    ctx.fillStyle = '#4a5a6a';
+    ctx.font = '10px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('Waiting for data…', W / 2, H / 2);
+    return;
+  }
+
+  const minVal = Math.min(...data);
+  const maxVal = Math.max(...data);
+  const range  = maxVal - minVal || 0.001;
+
+  // Helper: map data index → canvas x
+  const xFor = i => PL + (i / (data.length - 1)) * CW;
+  // Helper: map value → canvas y
+  const yFor = v => PT + (1 - (v - minVal) / range) * CH;
+
+  // ── Grid lines (horizontal) ──────────────────────────────
+  ctx.strokeStyle = '#1e2a3a';
+  ctx.lineWidth   = 0.5;
+  for (let i = 0; i <= 4; i++) {
+    const y = PT + (i / 4) * CH;
+    ctx.beginPath();
+    ctx.moveTo(PL, y);
+    ctx.lineTo(PL + CW, y);
+    ctx.stroke();
+
+    // Y-axis label
+    const val = maxVal - (i / 4) * range;
+    ctx.fillStyle  = '#4a5a6a';
+    ctx.font       = `${9}px monospace`;
+    ctx.textAlign  = 'right';
+    ctx.fillText(val.toFixed(3), PL - 3, y + 3);
+  }
+
+  // ── X-axis labels (show every ~10th point) ──────────────
+  ctx.fillStyle = '#4a5a6a';
+  ctx.font      = '9px monospace';
+  ctx.textAlign = 'center';
+  const labelEvery = Math.max(1, Math.floor(data.length / 6));
+  data.forEach((_, i) => {
+    if (i % labelEvery === 0) {
+      const secsAgo = (data.length - 1 - i) * 7;
+      const label   = secsAgo === 0 ? 'now' : `-${secsAgo}s`;
+      ctx.fillText(label, xFor(i), H - 5);
+    }
+  });
+
+  // ── Filled area ──────────────────────────────────────────
+  ctx.beginPath();
+  ctx.moveTo(xFor(0), yFor(data[0]));
+  data.forEach((v, i) => { if (i > 0) ctx.lineTo(xFor(i), yFor(v)); });
+  ctx.lineTo(xFor(data.length - 1), PT + CH);
+  ctx.lineTo(xFor(0), PT + CH);
+  ctx.closePath();
+  ctx.fillStyle = color.fill;
+  ctx.fill();
+
+  // ── Line ─────────────────────────────────────────────────
+  ctx.beginPath();
+  ctx.moveTo(xFor(0), yFor(data[0]));
+  data.forEach((v, i) => { if (i > 0) ctx.lineTo(xFor(i), yFor(v)); });
+  ctx.strokeStyle = color.line;
+  ctx.lineWidth   = 1.5;
+  ctx.lineJoin    = 'round';
+  ctx.stroke();
+
+  // ── Latest value dot ─────────────────────────────────────
+  const last = data[data.length - 1];
+  ctx.beginPath();
+  ctx.arc(xFor(data.length - 1), yFor(last), 3, 0, Math.PI * 2);
+  ctx.fillStyle = color.line;
+  ctx.fill();
+}
+
+// ── STATUS HELPERS ────────────────────────────────────────
+function pillClass(status) {
+  return {
+    HEALTHY:  'pill-healthy',
+    WATCH:    'pill-watch',
+    WARNING:  'pill-warning',
+    CRITICAL: 'pill-critical',
+  }[status] || 'pill-healthy';
+}
+
+function boxClass(risk) {
+  if (risk > 70) return 'stat-box danger';
+  if (risk > 35) return 'stat-box warn';
+  return 'stat-box';
+}
+
+// ── FETCH AND RENDER ──────────────────────────────────────
+async function refresh() {
+  let data;
+  try {
+    const res = await fetch('/api/sensor-history?limit=60');
+    if (!res.ok) throw new Error('bad response');
+    const json = await res.json();
+    if (json.status !== 'ok' || !json.data?.length) return;
+    data = json.data;
+  } catch (e) {
+    console.warn('Detail fetch error:', e);
+    return;
+  }
+
+  const latest = data[data.length - 1];
+
+  // ── Update live stat boxes ────────────────────────────
+  document.getElementById('val-s1').textContent   = latest.S1.value.toFixed(4);
+  document.getElementById('val-s2').textContent   = latest.S2.value.toFixed(4);
+  document.getElementById('val-s3').textContent   = latest.S3.value.toFixed(4);
+  document.getElementById('val-risk').textContent = latest.max_risk.toFixed(1);
+  document.getElementById('last-ts').textContent  = latest.timestamp.slice(11, 19);
+
+  document.getElementById('box-s1').className   = boxClass(latest.S1.risk);
+  document.getElementById('box-s2').className   = boxClass(latest.S2.risk);
+  document.getElementById('box-s3').className   = boxClass(latest.S3.risk);
+  document.getElementById('box-risk').className = boxClass(latest.max_risk);
+
+  document.getElementById('risk-label-s1').textContent =
+    `risk ${latest.S1.risk.toFixed(1)}%`;
+  document.getElementById('risk-label-s2').textContent =
+    `risk ${latest.S2.risk.toFixed(1)}%`;
+  document.getElementById('risk-label-s3').textContent =
+    `risk ${latest.S3.risk.toFixed(1)}%`;
+  document.getElementById('risk-label-combined').textContent =
+    `max ${latest.max_risk.toFixed(1)}%`;
+
+  // ── Overall badge ─────────────────────────────────────
+  const pill = document.getElementById('overall-pill');
+  pill.className   = `${pillClass(latest.overall_status)}`;
+  pill.textContent = latest.overall_status;
+
+  // ── Source badge ──────────────────────────────────────
+  const src = document.getElementById('source-badge');
+  src.className   = `source-badge ${latest.source === 'live' ? 'src-live' : 'src-sim'}`;
+  src.textContent = latest.source === 'live' ? 'LIVE IoT' : 'SIMULATED';
+
+  // ── Draw charts ───────────────────────────────────────
+  drawLineChart(
+    document.getElementById('chart-s1'),
+    data.map(d => d.S1.value),
+    COLORS.S1, 'με'
+  );
+  drawLineChart(
+    document.getElementById('chart-s2'),
+    data.map(d => d.S2.value),
+    COLORS.S2, 'g'
+  );
+  drawLineChart(
+    document.getElementById('chart-s3'),
+    data.map(d => d.S3.value),
+    COLORS.S3, 'με'
+  );
+  drawLineChart(
+    document.getElementById('chart-risk'),
+    data.map(d => d.max_risk),
+    COLORS.risk, '%'
+  );
+}
+
+// Redraw charts on window resize so they always fill their containers
+window.addEventListener('resize', refresh);
+
+// Start immediately, then every 7 seconds
+refresh();
+setInterval(refresh, 7000);
+</script>
+</body>
+</html>
