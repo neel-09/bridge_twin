@@ -37,8 +37,7 @@ function buildSensorCards() {
 
 // ── MAIN UI UPDATE (called every UI_UPDATE_EVERY frames) ──
 function updateUI(maxDefl, mode, crackRisk) {
-  const elapsed = Math.floor((Date.now() - startTime) / 1000);
-  document.getElementById('uptime').textContent = `t = ${elapsed}s`;
+  
 
   // Guard: mode may be out of range briefly during reset
   const validMode = mode >= 1 && mode <= CONFIG.MODE_FREQS.length;

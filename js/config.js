@@ -10,7 +10,7 @@ const CONFIG = Object.freeze({
   // Update these once real modal-testing data is available.
   MODE_FREQS: [12.0, 31.2, 58.7],
   DEFAULT_MODE: 1,
-  DEFAULT_AMPLITUDE: 1.0,
+  DEFAULT_AMPLITUDE: 0.0,
 
   // ── SENSOR LAYOUT ───────────────────────────────────────
   // pos  : normalised position along span  (-1 = left abutment, +1 = right)
