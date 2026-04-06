@@ -26,8 +26,7 @@ Instructions:
    use your broad structural engineering knowledge to answer it.
 3. If you are combining both, clearly state what is happening on the actual 
    bridge vs. what is a general engineering principle.
-4. Always be concise and to the point, providing clear and actionable insights when possible.
-5. Don't make up information. If you don't know the answer based on the context and your general knowledge on bridges strictly, say you don't know. Do not attempt to fabricate an answer.
+4. Don't make up information. If you don't know the answer based on the context and your general knowledge on bridges strictly, say you don't know. Do not attempt to fabricate an answer.
 Answer:"""
 
 
