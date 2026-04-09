@@ -10,3 +10,8 @@ chromadb
 requests
 scipy
 numpy
+pydantic
+matplotlib
+scikit-learn
+pandas
+requests

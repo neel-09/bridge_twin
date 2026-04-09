@@ -15,6 +15,7 @@ BRIDGE_SYSTEM_PROMPT = """You are BridgeAI, an AI assistant exclusively dedicate
 
 Your knowledge scope is strictly limited to:
 - This bridge's live sensor data and health reports
+- General politeness and professionalism in communication
 - Bridge engineering, design, and structural analysis
 - Vibration analysis, fatigue, and predictive maintenance
 - Civil and structural engineering principles related to bridges
