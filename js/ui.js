@@ -1,97 +1,80 @@
-// ui.js
-// All DOM updates: sensor cards, sparklines, FFT, HUD, alerts.
-// Reads CONFIG for thresholds — no magic numbers.
+// js/ui.js
 
+const modeFreqs = CONFIG.MODE_FREQS;
 const startTime = Date.now();
 
-// ── BUILD SENSOR CARDS (called once on init) ─────────────
+// ── BUILD STRIP CARDS (called once at init) ───────────────
 function buildSensorCards() {
-  const container = document.getElementById('sensor-cards');
-  container.innerHTML = '';
-
   sensorData.forEach(s => {
+    const slot = document.getElementById(`strip-${s.id}`);
+    if (!slot) {
+      console.warn(`[ui] strip slot not found: strip-${s.id}`);
+      return;
+    }
+
     const typeLabel = s.type === 'accelerometer' ? '⟳ Accel' : '⊕ Strain';
-    container.innerHTML += `
-      <div class="sensor-card" id="card-${s.id}">
-        <div class="sensor-card-header">
-          <span class="sensor-id">${s.id}</span>
-          <span class="sensor-type">${typeLabel}</span>
-          <span class="sensor-status s-normal" id="sts-${s.id}">Normal</span>
+    const unit      = s.type === 'accelerometer' ? 'g' : 'με';
+
+    slot.innerHTML = `
+      <div class="strip-header">
+        <span class="strip-id">${s.id}</span>
+        <span class="strip-type-badge">${typeLabel}</span>
+        <span class="strip-status s-normal" id="sts-${s.id}">Normal</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:4px;margin:2px 0;">
+        <span class="strip-value" id="val-${s.id}">0.000</span>
+        <span class="strip-unit">${unit}</span>
+        <span class="strip-label" style="margin-left:6px;">${s.label}</span>
+      </div>
+      <canvas class="strip-sparkline" id="spark-${s.id}" height="24"></canvas>
+      <div class="strip-risk-row">
+        <span class="strip-risk-label">Crack risk</span>
+        <div class="strip-risk-bar-bg">
+          <div class="strip-risk-bar-fill"
+               id="rb-${s.id}"
+               style="width:0%;background:var(--safe)"></div>
         </div>
-        <div class="sensor-val" id="val-${s.id}">0.000</div>
-        <div class="sensor-sub">${s.label}</div>
-        <canvas class="sparkline" id="spark-${s.id}" height="28"></canvas>
-        <div class="risk-wrap">
-          <div class="risk-label">
-            <span>Crack risk</span>
-            <span id="rp-${s.id}">0%</span>
-          </div>
-          <div class="risk-bar-bg">
-            <div class="risk-bar-fill" id="rb-${s.id}"
-                 style="width:0%;background:var(--safe)"></div>
-          </div>
-        </div>
+        <span class="strip-risk-pct" id="rp-${s.id}">0%</span>
       </div>`;
   });
+
+  console.log('[ui] Sensor strip cards built.');
 }
 
-// ── MAIN UI UPDATE (called every UI_UPDATE_EVERY frames) ──
+// ── MAIN UI UPDATE (animation loop, throttled) ────────────
+// Handles HUD, uptime, FFT, and alert box.
+// Sensor strip values are updated directly in sensors.js
+// via _updateStripDOM() on each backend poll.
 function updateUI(maxDefl, mode, crackRisk) {
-  
+  const elapsed = Math.floor((Date.now() - startTime) / 1000);
+  document.getElementById('uptime').textContent = `t = ${elapsed}s`;
 
-  // Guard: mode may be out of range briefly during reset
-  const validMode = mode >= 1 && mode <= CONFIG.MODE_FREQS.length;
-  const freq = validMode ? CONFIG.MODE_FREQS[mode - 1] : 0;
+  const validMode = mode >= 1 && mode <= modeFreqs.length;
+  const freq      = validMode ? modeFreqs[mode - 1] : 0;
 
-  document.getElementById('nat-freq').textContent = `fn = ${freq.toFixed(1)} Hz`;
+  document.getElementById('nat-freq').textContent =
+    validMode ? `fn = ${freq.toFixed(1)} Hz` : 'fn = — Hz';
+
   document.getElementById('hud-defl').innerHTML =
     `${maxDefl.toFixed(2)} <span class="hud-unit">mm</span>`;
 
-  let anyAlert = false;
-
-  sensorData.forEach(s => {
-    const last = s.vals[s.vals.length - 1] || 0;
-    // Show correct engineering unit per sensor type
-    const unit = s.type === 'accelerometer' ? 'm/s²' : '%';
-    document.getElementById(`val-${s.id}`).textContent =
-      `${Math.abs(last).toFixed(3)} ${unit}`;
-
-    const rp   = Math.round(s.risk);
-    const fill = document.getElementById(`rb-${s.id}`);
-    const sts  = document.getElementById(`sts-${s.id}`);
-    const card = document.getElementById(`card-${s.id}`);
-
-    document.getElementById(`rp-${s.id}`).textContent = `${rp}%`;
-    fill.style.width = rp + '%';
-    fill.style.background =
-      rp > CONFIG.RISK.CRITICAL ? 'var(--danger)' :
-      rp > CONFIG.RISK.WARNING  ? 'var(--warn)'   : 'var(--safe)';
-
-    if (rp > CONFIG.RISK.CRITICAL) {
-      sts.textContent = 'Critical'; sts.className = 'sensor-status s-danger';
-      card.className  = 'sensor-card danger'; anyAlert = true;
-    } else if (rp > CONFIG.RISK.WARNING) {
-      sts.textContent = 'Warning'; sts.className = 'sensor-status s-warn';
-      card.className  = 'sensor-card warn';
-    } else {
-      sts.textContent = 'Normal'; sts.className = 'sensor-status s-normal';
-      card.className  = 'sensor-card';
+  // Alert box
+  const anyAlert = sensorData.some(s => s.risk > CONFIG.RISK.CRITICAL);
+  const alertBox  = document.getElementById('alert-box');
+  if (alertBox) {
+    alertBox.classList.toggle('visible', anyAlert);
+    if (anyAlert) {
+      const crit = sensorData
+        .filter(s => s.risk > CONFIG.RISK.CRITICAL)
+        .map(s => s.id).join(', ');
+      const msgEl = document.getElementById('alert-msg');
+      if (msgEl) msgEl.textContent = `High stress at ${crit}. Inspect immediately.`;
     }
-
-    drawSparkline(s);
-  });
-
-  // ── ALERT BOX ──────────────────────────────────────────
-  document.getElementById('alert-box').classList.toggle('visible', anyAlert);
-  if (anyAlert) {
-    const crit = sensorData
-      .filter(s => s.risk > CONFIG.RISK.CRITICAL)
-      .map(s => s.id).join(', ');
-    document.getElementById('alert-msg').textContent =
-      `High stress at ${crit}. Inspect immediately.`;
   }
 
-  drawFFT(mode, crackRisk);
+  // FFT — only draw if canvas exists (user may have removed it)
+  const fftCanvas = document.getElementById('fft-canvas');
+  if (fftCanvas) drawFFT(mode, crackRisk);
 }
 
 // ── SPARKLINE ─────────────────────────────────────────────
@@ -100,7 +83,7 @@ function drawSparkline(s) {
   if (!canvas || s.vals.length < 2) return;
 
   canvas.width  = canvas.offsetWidth * devicePixelRatio;
-  canvas.height = 28 * devicePixelRatio;
+  canvas.height = 24 * devicePixelRatio;
 
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -109,12 +92,10 @@ function drawSparkline(s) {
   const max = Math.max(...s.vals.map(Math.abs), 0.001);
   const rr  = s.risk / 100;
 
-  // Zero line
-  ctx.strokeStyle = '#1e2a3a';
+  ctx.strokeStyle = '#1a2535';
   ctx.lineWidth   = 0.5;
   ctx.beginPath(); ctx.moveTo(0, mid); ctx.lineTo(w, mid); ctx.stroke();
 
-  // Signal — colour shifts green → red with crack risk
   const R = Math.round((0.1 + rr * 0.9) * 255);
   const G = Math.round((0.8 - rr * 0.6) * 255);
   const B = Math.round((1.0 - rr * 0.8) * 255);
@@ -123,28 +104,29 @@ function drawSparkline(s) {
   ctx.beginPath();
   s.vals.forEach((v, i) => {
     const x = (i / (s.vals.length - 1)) * w;
-    const y = mid - (v / max) * mid * 0.8;
+    const y = mid - (v / max) * mid * 0.78;
     i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
   });
   ctx.stroke();
 }
 
-// ── FFT BAR CHART ─────────────────────────────────────────
+// ── FFT ───────────────────────────────────────────────────
 function drawFFT(mode, crackRisk) {
   const canvas = document.getElementById('fft-canvas');
+  if (!canvas) return;
+
   canvas.width  = canvas.offsetWidth * devicePixelRatio;
-  canvas.height = 60 * devicePixelRatio;
+  canvas.height = 56 * devicePixelRatio;
 
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   const w = canvas.width, h = canvas.height;
-  const rr = crackRisk / 100;
-  const validMode  = mode >= 1 && mode <= CONFIG.MODE_FREQS.length;
-  const activePeak = validMode ? CONFIG.MODE_FREQS[mode - 1] : -1;
-
-  const freqBins = [8, 12.4, 20, 31.2, 42, 58.7, 75, 90];
-  const slotW    = w / freqBins.length;
+  const rr         = crackRisk / 100;
+  const validMode  = mode >= 1 && mode <= modeFreqs.length;
+  const activePeak = validMode ? modeFreqs[mode - 1] : -1;
+  const freqBins   = [8, 12.4, 20, 31.2, 42, 58.7, 75, 90];
+  const slotW      = w / freqBins.length;
 
   freqBins.forEach((f, i) => {
     const isActive = activePeak > 0 && Math.abs(f - activePeak) < 2;
@@ -157,25 +139,30 @@ function drawFFT(mode, crackRisk) {
     const x  = i * slotW + slotW * 0.2;
 
     ctx.fillStyle = isActive
-      ? `rgb(${Math.round((0.1 + rr * 0.9) * 255)},${Math.round((0.83 - rr * 0.5) * 255)},255)`
-      : 'rgb(40,100,150)';
+      ? `rgb(${Math.round((0.1+rr*0.9)*255)},${Math.round((0.83-rr*0.5)*255)},255)`
+      : 'rgb(30,80,120)';
     ctx.fillRect(x, h - bh, bw, bh);
   });
 
-  document.getElementById('fft-peak').textContent =
-    activePeak > 0 ? `${activePeak} Hz` : '—';
+  const peakEl = document.getElementById('fft-peak');
+  if (peakEl) peakEl.textContent = activePeak > 0 ? `${activePeak} Hz` : '—';
 }
 
 // ── STATUS HELPERS ────────────────────────────────────────
-function setStatusText(t) { document.getElementById('status-text').textContent = t; }
-function setLoadMsg(t)    { document.getElementById('load-msg').textContent     = t; }
-
+function setStatusText(t) {
+  const el = document.getElementById('status-text');
+  if (el) el.textContent = t;
+}
+function setLoadMsg(t) {
+  const el = document.getElementById('load-msg');
+  if (el) el.textContent = t;
+}
 function showErrorScreen(detail) {
   document.getElementById('loading').style.display = 'none';
   document.getElementById('error-screen').classList.add('visible');
-  if (detail) document.getElementById('err-detail').textContent = detail;
+  const d = document.getElementById('err-detail');
+  if (d && detail) d.textContent = detail;
 }
-
 function hideLoadingScreen() {
   document.getElementById('loading').style.display = 'none';
 }

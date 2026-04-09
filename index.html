@@ -17,7 +17,7 @@
   </div>
 </header>
 
-<!-- Left column: canvas on top, chatbot strip on bottom -->
+<!-- ── LEFT COLUMN: canvas + sensor strip ──────────────── -->
 <div id="left-col">
 
   <div id="canvas-wrap">
@@ -31,41 +31,13 @@
 
     <div id="error-screen">
       <div class="err-title">Could not load bridge.glb</div>
-      <div class="err-msg">Run the server then reload:</div>
       <div class="err-code">
         uv run python -m uvicorn main:app --reload --port 8000
       </div>
-      <div class="err-msg" id="err-detail"
-           style="color:var(--danger);font-size:10px;margin-top:4px"></div>
+      <div id="err-detail"></div>
     </div>
 
-    <!-- Sensor pins — clicking opens detail page -->
-    <div class="sensor-pin hud" id="pin-S1"
-         style="left:28%;top:52%"
-         onclick="openDetailPage()"
-         title="Click to open Sensor Detail">
-      <div class="pin-ring"><div class="pin-dot"></div></div>
-      <div class="pin-label">S1</div>
-    </div>
-    <div class="sensor-pin hud" id="pin-S2"
-         style="left:50%;top:48%"
-         onclick="openDetailPage()"
-         title="Click to open Sensor Detail">
-      <div class="pin-ring"
-           style="border-color:var(--warn);background:rgba(255,179,0,0.08)">
-        <div class="pin-dot" style="background:var(--warn)"></div>
-      </div>
-      <div class="pin-label" style="color:var(--warn)">S2</div>
-    </div>
-    <div class="sensor-pin hud" id="pin-S3"
-         style="left:72%;top:52%"
-         onclick="openDetailPage()"
-         title="Click to open Sensor Detail">
-      <div class="pin-ring"><div class="pin-dot"></div></div>
-      <div class="pin-label">S3</div>
-    </div>
-
-    <!-- HUD: top-left deflection -->
+    <!-- HUD top-left -->
     <div class="hud hud-tl">
       <div class="hud-label">Max deflection</div>
       <div class="hud-value" id="hud-defl">
@@ -73,7 +45,7 @@
       </div>
     </div>
 
-    <!-- HUD: bottom-left legend -->
+    <!-- HUD bottom-left legend -->
     <div class="hud hud-bl">
       <div class="legend">
         <div class="legend-item">
@@ -88,34 +60,50 @@
       </div>
     </div>
 
-    <!-- HUD: bottom-right hint -->
-    <div class="hud" style="bottom:14px;right:14px;pointer-events:none;">
-      <span style="font-size:9px;color:var(--muted);letter-spacing:0.07em;">
-        CLICK A SENSOR PIN → DETAIL VIEW
-      </span>
+    <!-- Sensor pins — positions match sensor strip thirds below -->
+    <!-- S1: center of left third  → 16.67% -->
+    <!-- S2: center of middle third → 50%   -->
+    <!-- S3: center of right third  → 83.33% -->
+    <div class="sensor-pin hud" id="pin-S1"
+         style="left:16.67%;top:68%"
+         onclick="openDetailPage()"
+         title="Click for Sensor Detail">
+      <div class="pin-ring"><div class="pin-dot"></div></div>
+      <div class="pin-label">S1</div>
+    </div>
+    <div class="sensor-pin hud" id="pin-S2"
+         style="left:50%;top:64%"
+         onclick="openDetailPage()"
+         title="Click for Sensor Detail">
+      <div class="pin-ring"
+           style="border-color:var(--warn);background:rgba(255,179,0,0.08)">
+        <div class="pin-dot" style="background:var(--warn)"></div>
+      </div>
+      <div class="pin-label" style="color:var(--warn)">S2</div>
+    </div>
+    <div class="sensor-pin hud" id="pin-S3"
+         style="left:83.33%;top:68%"
+         onclick="openDetailPage()"
+         title="Click for Sensor Detail">
+      <div class="pin-ring"><div class="pin-dot"></div></div>
+      <div class="pin-label">S3</div>
     </div>
   </div><!-- /#canvas-wrap -->
 
-  <!-- ── CHATBOT STRIP (below canvas) ─────────────────────── -->
-  <div id="chat-panel">
-    <div id="chat-messages"></div>
-    <div id="chat-input-row">
-      <input
-        type="text"
-        id="chat-input"
-        placeholder="Ask the bridge anything — e.g. How is my bridge?"
-        onkeydown="if(event.key==='Enter') sendChat()"
-        autocomplete="off"
-      />
-      <button id="chat-send" onclick="sendChat()">↑</button>
-    </div>
+  <!-- ── SENSOR STRIP (horizontal, 3 panels) ───────────── -->
+  <div id="sensor-strip">
+    <!-- Cards injected by ui.js into these slots -->
+    <div class="strip-slot" id="strip-S1"></div>
+    <div class="strip-slot" id="strip-S2"></div>
+    <div class="strip-slot" id="strip-S3"></div>
   </div>
-  <!-- ──────────────────────────────────────────────────────── -->
 
 </div><!-- /#left-col -->
 
-<!-- Right sidebar -->
+<!-- ── RIGHT SIDEBAR ─────────────────────────────────────── -->
 <aside>
+
+  <!-- Alert -->
   <div class="alert-box" id="alert-box">
     <div class="alert-title">⚠ Crack risk detected</div>
     <div class="alert-msg" id="alert-msg">
@@ -123,46 +111,12 @@
     </div>
   </div>
 
-  <div>
-    <div class="panel-title">Model info</div>
-    <div class="info-row">
-      <span class="info-key">Source</span>
-      <span class="info-val" id="info-src">—</span>
-    </div>
-    <div class="info-row">
-      <span class="info-key">Vertices</span>
-      <span class="info-val" id="info-verts">—</span>
-    </div>
-    <div class="info-row">
-      <span class="info-key">Objects</span>
-      <span class="info-val" id="info-objs">—</span>
-    </div>
-    <div class="info-row">
-      <span class="info-key">Scale</span>
-      <span class="info-val" id="info-scale">—</span>
-    </div>
-  </div>
+  
 
   <div class="divider"></div>
 
-  <div>
-    <div class="panel-title">Sensor readings</div>
-    <div id="sensor-cards"></div>
-  </div>
-
-  <div class="divider"></div>
-
-  <div>
-    <div class="panel-title">Frequency spectrum</div>
-    <canvas id="fft-canvas"></canvas>
-    <div style="font-size:10px;color:var(--muted);margin-top:4px">
-      Peak: <span id="fft-peak" style="color:var(--accent)">—</span>
-    </div>
-  </div>
-
-  <div class="divider"></div>
-
-  <div>
+  <!-- Simulation controls -->
+  <div class="side-section">
     <div class="panel-title">Simulation controls</div>
     <div class="ctrl-row">
       <div>
@@ -196,14 +150,32 @@
       <button class="btn" onclick="resetSim()">Reset</button>
     </div>
   </div>
+
+  <div class="divider"></div>
+
+  <!-- ── CHATBOT (vertical, fills remaining height) ──────── -->
+  <div id="chat-section">
+    <div class="panel-title">Ask the Bridge</div>
+    <div id="chat-messages"></div>
+    <div id="chat-input-row">
+      <input
+        type="text"
+        id="chat-input"
+        placeholder="Ask about bridge health…"
+        onkeydown="if(event.key==='Enter') sendChat()"
+        autocomplete="off"
+      />
+      <button id="chat-send" onclick="sendChat()">↑</button>
+    </div>
+  </div>
+
 </aside>
 
-<!-- Three.js -->
+<!-- Three.js CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
-<!-- Project modules -->
 <script src="js/config.js"></script>
 <script src="js/sensors.js"></script>
 <script src="js/deformation.js"></script>

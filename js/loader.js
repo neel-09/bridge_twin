@@ -1,6 +1,4 @@
-// loader.js
-// Loads bridge.glb, auto-scales, sets up geometry for deformation,
-// and calls cacheMeshBounds() so deformation.js never has to recompute it.
+// js/loader.js
 
 function loadBridgeModel(scene, camera, controls) {
   setLoadMsg('Fetching bridge.glb…');
@@ -10,12 +8,10 @@ function loadBridgeModel(scene, camera, controls) {
   loader.load(
     'bridge.glb',
 
-    // ── ON SUCCESS ──────────────────────────────────────
     function onSuccess(gltf) {
       setLoadMsg('Processing geometry…');
       const model = gltf.scene;
 
-      // ── AUTO SCALE & CENTER ────────────────────────────
       const box         = new THREE.Box3().setFromObject(model);
       const size        = box.getSize(new THREE.Vector3());
       const center      = box.getCenter(new THREE.Vector3());
@@ -25,13 +21,11 @@ function loadBridgeModel(scene, camera, controls) {
       model.scale.setScalar(scaleFactor);
       model.position.sub(center.multiplyScalar(scaleFactor));
 
-      // Sit flush on the grid
       const box2 = new THREE.Box3().setFromObject(model);
       model.position.y -= box2.min.y;
 
       scene.add(model);
 
-      // ── PREPARE MESHES ────────────────────────────────
       let totalVerts = 0, objCount = 0;
 
       model.traverse(child => {
@@ -52,18 +46,14 @@ function loadBridgeModel(scene, camera, controls) {
 
         totalVerts += geo.attributes.position.count;
 
-        // Store originals for deformation reset
         const orig = geo.attributes.position.array.slice();
         originalPositions.push({ mesh: child, orig });
-
-        // Cache bounding box ONCE here — never again per-frame
         cacheMeshBounds(child);
 
-        // Vertex colour buffer (initial dark-teal)
         const n      = geo.attributes.position.count;
         const colors = new Float32Array(n * 3);
         for (let i = 0; i < n; i++) {
-          colors[i * 3]     = 0.1;
+          colors[i * 3]     = 0.10;
           colors[i * 3 + 1] = 0.35;
           colors[i * 3 + 2] = 0.40;
         }
@@ -71,19 +61,29 @@ function loadBridgeModel(scene, camera, controls) {
         child.material.vertexColors = true;
       });
 
-      // ── MODEL INFO PANEL ──────────────────────────────
-      document.getElementById('info-src').textContent   = 'bridge.glb';
-      document.getElementById('info-verts').textContent = totalVerts.toLocaleString();
-      document.getElementById('info-objs').textContent  = objCount;
-      document.getElementById('info-scale').textContent = `${scaleFactor.toFixed(4)}×`;
+      const elSrc   = document.getElementById('info-src');
+      const elVerts = document.getElementById('info-verts');
+      const elObjs  = document.getElementById('info-objs');
+      const elScale = document.getElementById('info-scale');
 
-      // ── CAMERA FIT ────────────────────────────────────
+      if (elSrc)   elSrc.textContent   = 'bridge.glb';
+      if (elVerts) elVerts.textContent = totalVerts.toLocaleString();
+      if (elObjs)  elObjs.textContent  = objCount;
+      if (elScale) elScale.textContent = `${scaleFactor.toFixed(4)}×`;
+
+      // ── FIXED CAMERA POSITION ────────────────────────────
+      // Frames the bridge from a slightly elevated front angle.
+      // Never changes after this — bridge is static.
       const finalBox  = new THREE.Box3().setFromObject(model);
       const finalSize = finalBox.getSize(new THREE.Vector3());
       const dist      = finalSize.length() * CONFIG.CAMERA_DIST_K;
-      camera.position.set(0, dist * 0.4, dist * 0.9);
-      controls.target.set(0, finalSize.y * 0.3, 0);
-      controls.update();
+
+      camera.position.set(0, dist * 0.28, dist * 0.85);
+      camera.lookAt(0, finalSize.y * 0.25, 0);
+      camera.updateProjectionMatrix();
+
+      // controls is null — no update needed
+      if (controls) controls.update();
 
       setLoadMsg('Ready.');
       setTimeout(() => {
@@ -92,7 +92,6 @@ function loadBridgeModel(scene, camera, controls) {
       }, 500);
     },
 
-    // ── ON PROGRESS ──────────────────────────────────────
     function onProgress(xhr) {
       if (xhr.lengthComputable) {
         const pct = Math.round((xhr.loaded / xhr.total) * 100);
@@ -100,11 +99,10 @@ function loadBridgeModel(scene, camera, controls) {
       }
     },
 
-    // ── ON ERROR ─────────────────────────────────────────
     function onError(err) {
       console.error('GLB load error:', err);
       showErrorScreen(
-        err.message || 'bridge.glb not found — is the Python server running?'
+        err.message || 'bridge.glb not found — is the server running?'
       );
     }
   );

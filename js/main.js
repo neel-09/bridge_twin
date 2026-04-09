@@ -12,29 +12,28 @@ const renderer = new THREE.WebGLRenderer({
   antialias: true,
 });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setClearColor(0x070a0f, 1);
+renderer.setClearColor(0x000000, 1);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type    = THREE.PCFSoftShadowMap;
 
 // ── SCENE ─────────────────────────────────────────────────
 const scene = new THREE.Scene();
-scene.fog   = new THREE.FogExp2(0x070a0f, 0.05);
+scene.fog   = new THREE.FogExp2(0x000000, 0.04);
 
-// ── CAMERA ────────────────────────────────────────────────
-const camera = new THREE.PerspectiveCamera(45, 1, 0.001, 200);
-camera.position.set(0, 0.5, 1.2);
+// ── CAMERA — fixed, no orbit ──────────────────────────────
+const camera = new THREE.PerspectiveCamera(42, 1, 0.001, 200);
+// Position set here as default; loader.js overrides after model loads
+camera.position.set(0, 0.6, 1.6);
+camera.lookAt(0, 0.1, 0);
 
-// ── ORBIT CONTROLS ────────────────────────────────────────
-const controls         = new THREE.OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-controls.dampingFactor = 0.08;
-controls.minDistance   = 0.2;
-controls.maxDistance   = 10;
+// ── NO ORBIT CONTROLS — bridge is fully static ────────────
+// OrbitControls script is still loaded (required by loader.js import chain)
+// but we do not create a controls instance.
 
 // ── LIGHTING ──────────────────────────────────────────────
-scene.add(new THREE.AmbientLight(0x223344, 2.5));
+scene.add(new THREE.AmbientLight(0x223344, 2.8));
 
-const dirLight = new THREE.DirectionalLight(0x00d4ff, 1.5);
+const dirLight = new THREE.DirectionalLight(0x00d4ff, 1.6);
 dirLight.position.set(3, 5, 3);
 dirLight.castShadow            = true;
 dirLight.shadow.mapSize.width  = 1024;
@@ -50,18 +49,16 @@ fillLight.position.set(0, -2, 0);
 scene.add(fillLight);
 
 // ── GRID ──────────────────────────────────────────────────
-scene.add(new THREE.GridHelper(10, 30, 0x1e2a3a, 0x111820));
+scene.add(new THREE.GridHelper(10, 30, 0x1a2535, 0x0d1420));
 
 // ── ANIMATION LOOP ────────────────────────────────────────
 function animate(timestamp) {
   requestAnimationFrame(animate);
-  controls.update();
+  // No controls.update() — camera is fixed
 
   const maxDefl = updateDeformation(
     timestamp, currentMode, amplitude, crackRisk
   );
-
-  // Only runs if backend has never responded
   updateSensorsSimulated(timestamp, currentMode, amplitude, crackRisk);
 
   if (++frameCount % CONFIG.UI_UPDATE_EVERY === 0) {
@@ -87,7 +84,6 @@ document.getElementById('amp-slider').addEventListener('input', function () {
   amplitude = parseFloat(this.value);
   document.getElementById('amp-val').textContent = amplitude.toFixed(1) + '×';
 });
-
 document.getElementById('risk-slider').addEventListener('input', function () {
   crackRisk = parseInt(this.value, 10);
   document.getElementById('risk-val').textContent = crackRisk + '%';
@@ -102,7 +98,6 @@ function setMode(m) {
   );
 }
 
-// ── SIMULATE CRACK ────────────────────────────────────────
 function simulateCrack() {
   let v = crackRisk;
   const iv = setInterval(() => {
@@ -117,7 +112,6 @@ function simulateCrack() {
   document.getElementById('amp-val').textContent = amplitude.toFixed(1) + '×';
 }
 
-// ── RESET ─────────────────────────────────────────────────
 function resetSim() {
   crackRisk   = 0;
   amplitude   = CONFIG.DEFAULT_AMPLITUDE;
@@ -132,8 +126,7 @@ function resetSim() {
   document.getElementById('alert-box').classList.remove('visible');
 }
 
-// ── DETAIL PAGE NAVIGATION ────────────────────────────────
-// Called by sensor pin onclick handlers in index.html.
+// ── DETAIL PAGE ───────────────────────────────────────────
 function openDetailPage() {
   const a = document.createElement('a');
   a.href   = '/detail';
@@ -146,6 +139,6 @@ function openDetailPage() {
 
 // ── INIT ──────────────────────────────────────────────────
 buildSensorCards();
-loadBridgeModel(scene, camera, controls);
+loadBridgeModel(scene, camera, null);   // null = no controls
 startBackendPolling();
 animate(0);
