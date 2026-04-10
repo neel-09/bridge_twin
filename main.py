@@ -49,7 +49,7 @@ def _test_data_already_ingested() -> bool:
     """
     try:
         results = vector_store.collection.get(
-            where={"source": "sample_document.txt"},
+            where={"source": "bridge_health_report.txt"},
             limit=1
         )
         return len(results["ids"]) > 0
@@ -64,9 +64,9 @@ def _ingest_test_data():
     bridge_sensor_data so the chatbot can answer test questions
     (e.g. 'What is Python?') before real sensor data accumulates.
     """
-    test_file = "./data/test_files/sample_document.txt"
+    test_file = "../data/bridge_health_report.txt"
     if not os.path.exists(test_file):
-        print("[Startup] sample_document.txt not found — skipping test ingest.")
+        print("[Startup] bridge_health_report.txt not found — skipping test ingest.")
         return
 
     with open(test_file, "r", encoding="utf-8") as f:
@@ -80,7 +80,7 @@ def _ingest_test_data():
     ]
 
     if not sentences:
-        print("[Startup] sample_document.txt appears empty — skipping.")
+        print("[Startup] bridge_health_report.txt appears empty — skipping.")
         return
 
     embeddings = embedding_manager.generate_embeddings(sentences)
@@ -88,11 +88,11 @@ def _ingest_test_data():
         texts=sentences,
         embeddings=embeddings,
         metadatas=[
-            {"source": "sample_document.txt", "type": "test_doc"}
+            {"source": "bridge_health_report.txt", "type": "test_doc"}
             for _ in sentences
         ]
     )
-    print(f"[Startup] Ingested {len(sentences)} test chunks from sample_document.txt.")
+    print(f"[Startup] Ingested {len(sentences)} test chunks from bridge_health_report.txt.")
 
 
 # ── Lifespan ─────────────────────────────────────────────────────────────────

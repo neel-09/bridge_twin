@@ -1,3 +1,0 @@
-Bridge Twin is a digital twin platform that provides real-time monitoring, predictive maintenance, and data analytics for bridges.
-        It uses advanced sensors and machine learning algorithms to create a virtual replica of the physical bridge, allowing engineers to monitor its condition, predict potential issues, and optimize maintenance schedules. 
-        The platform helps improve the safety and longevity of bridges by providing insights into their structural health and performance.
