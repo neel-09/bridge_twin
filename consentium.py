@@ -239,18 +239,22 @@ class ConsentiumPoller:
     def _build_document(self, snapshot: dict) -> str:
         s2 = snapshot["S2"]
         return (
-            f"[{snapshot['timestamp']}] Session: {snapshot['session_id']} | "
-            f"Poll #{snapshot['poll']} | Source: live\n"
-            f"S1 (Strain, L/4 span):   {snapshot['S1']['value']:.5f} με | "
-            f"Risk: {snapshot['S1']['risk']:.1f}% | Status: {snapshot['S1']['status']}\n"
-            f"S2 (Accelerometer, Mid): {s2['value']:.5f} g | "
-            f"Axes: x={s2['ax']:.4f} y={s2['ay']:.4f} z={s2['az']:.4f} | "
-            f"Risk: {s2['risk']:.1f}% | Status: {s2['status']}\n"
-            f"S3 (Strain, 3L/4 span):  {snapshot['S3']['value']:.5f} με | "
-            f"Risk: {snapshot['S3']['risk']:.1f}% | Status: {snapshot['S3']['status']}\n"
-            f"Max risk: {snapshot['max_risk']:.1f}% | "
-            f"Overall: {snapshot['overall_status']}"
-        )
+            f"Bridge sensor reading recorded at {snapshot['timestamp']}. "
+            f"This is poll number {snapshot['poll']} from session {snapshot['session_id']}. "
+            f"The overall bridge health status is {snapshot['overall_status']} "
+            f"with a maximum risk score of {snapshot['max_risk']:.1f} percent. "
+            f"Sensor S1 at the L/4 span position is a strain gauge measuring "
+            f"{snapshot['S1']['value']:.5f} microstrain with a risk of "
+            f"{snapshot['S1']['risk']:.1f} percent and status {snapshot['S1']['status']}. "
+            f"Sensor S2 at the mid-span position is the accelerometer measuring "
+            f"a resultant acceleration of {s2['value']:.5f} g. "
+            f"The raw acceleration axes are x={s2['ax']:.4f}g, y={s2['ay']:.4f}g, "
+            f"z={s2['az']:.4f}g. "
+            f"S2 has a risk score of {s2['risk']:.1f} percent and status {s2['status']}. "
+            f"Sensor S3 at the 3L/4 span position is a strain gauge measuring "
+            f"{snapshot['S3']['value']:.5f} microstrain with a risk of "
+            f"{snapshot['S3']['risk']:.1f} percent and status {snapshot['S3']['status']}."
+    )
 
     # ── CHROMA PRUNING ────────────────────────────────────────────────────────
     def _prune_vector_store(self):

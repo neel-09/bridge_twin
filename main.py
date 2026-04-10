@@ -18,7 +18,7 @@ load_dotenv()
 embedding_manager = EmbeddingManager()
 vector_store      = VectorStore(
     collection_name="bridge_sensor_data",
-    persist_directory="./data/vector_store"
+    persist_directory="../data/vector_store"
 )
 llm = ChatGroq(
     groq_api_key=os.getenv("GROQ_API_KEY"),
@@ -64,7 +64,7 @@ def _ingest_test_data():
     bridge_sensor_data so the chatbot can answer test questions
     (e.g. 'What is Python?') before real sensor data accumulates.
     """
-    test_file = "../data/bridge_health_report.txt"
+    test_file = "./data/bridge_health_report.txt"
     if not os.path.exists(test_file):
         print("[Startup] bridge_health_report.txt not found — skipping test ingest.")
         return
@@ -75,7 +75,7 @@ def _ingest_test_data():
     # Split into sentences, keep only meaningful ones
     sentences = [
         s.strip()
-        for s in raw.replace("\n", " ").split(".")
+        for s in raw.replace("\n", " ").split("---")
         if len(s.strip()) > 20
     ]
 

@@ -1,509 +1,110 @@
 BRIDGE HEALTH MONITORING REPORT
-Generated   : 2026-04-10 16:31:51.852000
+Generated   : 2026-04-10 16:35:58.505000
 Total Windows : 50
 Health State Distribution:
 health_state
-Healthy    41
-Warning     9
+Healthy    37
+Warning    12
+Watch       1
 ========================================
 
-Bridge Sensor Report — Window 1
-Timestamp          : 2026-04-10 16:26:22.293000
-Health State       : Healthy
-Filtered Strain    : 11.9848 mV
-Filtered Distance  : 7.2105 cm
-Total RMS Accel    : 0.942312 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 1 recorded at 2026-04-10 16:30:22.492000, the bridge was classified in a 'Watch' health state. The physical sensors recorded a filtered strain of 71.9253 mV, a deck distance of 5.8943 cm, and a total vibration of 0.940324 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as True.
 ---
-Bridge Sensor Report — Window 2
-Timestamp          : 2026-04-10 16:26:28.655000
-Health State       : Healthy
-Filtered Strain    : 27.2981 mV
-Filtered Distance  : 7.2102 cm
-Total RMS Accel    : 1.054922 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 2 recorded at 2026-04-10 16:30:29.668000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 94.7889 mV, a deck distance of 6.6486 cm, and a total vibration of 1.047568 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 3
-Timestamp          : 2026-04-10 16:26:35.232000
-Health State       : Healthy
-Filtered Strain    : 23.3392 mV
-Filtered Distance  : 7.2101 cm
-Total RMS Accel    : 1.099448 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 3 recorded at 2026-04-10 16:30:37.238000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 58.8447 mV, a deck distance of 6.9355 cm, and a total vibration of 1.105047 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 4
-Timestamp          : 2026-04-10 16:26:41.901000
-Health State       : Healthy
-Filtered Strain    : 26.3210 mV
-Filtered Distance  : 7.2101 cm
-Total RMS Accel    : 1.126000 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 4 recorded at 2026-04-10 16:30:44.231000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 53.8850 mV, a deck distance of 7.0721 cm, and a total vibration of 1.132493 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 5
-Timestamp          : 2026-04-10 16:26:48.527000
-Health State       : Healthy
-Filtered Strain    : 15.7262 mV
-Filtered Distance  : 7.2100 cm
-Total RMS Accel    : 1.143870 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 5 recorded at 2026-04-10 16:30:50.985000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 39.3283 mV, a deck distance of 7.9362 cm, and a total vibration of 1.141246 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 6
-Timestamp          : 2026-04-10 16:26:55.110000
-Health State       : Healthy
-Filtered Strain    : 20.0265 mV
-Filtered Distance  : 7.2100 cm
-Total RMS Accel    : 1.157527 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 6 recorded at 2026-04-10 16:30:57.748000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 46.4505 mV, a deck distance of 7.5778 cm, and a total vibration of 1.150606 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 7
-Timestamp          : 2026-04-10 16:27:01.819000
-Health State       : Healthy
-Filtered Strain    : 17.3793 mV
-Filtered Distance  : 7.2100 cm
-Total RMS Accel    : 1.149647 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 7 recorded at 2026-04-10 16:31:04.271000, the bridge was classified in a 'Warning' health state. The physical sensors recorded a filtered strain of 42.8246 mV, a deck distance of 7.3964 cm, and a total vibration of 1.160277 g RMS. Anomaly detection systems flagged acceleration as True, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 8
-Timestamp          : 2026-04-10 16:27:08.800000
-Health State       : Healthy
-Filtered Strain    : 47.3780 mV
-Filtered Distance  : 7.2100 cm
-Total RMS Accel    : 1.150863 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 8 recorded at 2026-04-10 16:31:11.233000, the bridge was classified in a 'Warning' health state. The physical sensors recorded a filtered strain of 67.5036 mV, a deck distance of 7.3045 cm, and a total vibration of 1.160247 g RMS. Anomaly detection systems flagged acceleration as True, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 9
-Timestamp          : 2026-04-10 16:27:15.735000
-Health State       : Healthy
-Filtered Strain    : 50.5257 mV
-Filtered Distance  : 7.2100 cm
-Total RMS Accel    : 1.156409 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 9 recorded at 2026-04-10 16:31:17.893000, the bridge was classified in a 'Warning' health state. The physical sensors recorded a filtered strain of 65.5487 mV, a deck distance of 6.6216 cm, and a total vibration of 1.160158 g RMS. Anomaly detection systems flagged acceleration as True, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 10
-Timestamp          : 2026-04-10 16:27:22.325000
-Health State       : Healthy
-Filtered Strain    : 47.3022 mV
-Filtered Distance  : 7.2100 cm
-Total RMS Accel    : 1.149088 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 10 recorded at 2026-04-10 16:31:24.353000, the bridge was classified in a 'Warning' health state. The physical sensors recorded a filtered strain of 57.3275 mV, a deck distance of 6.9118 cm, and a total vibration of 1.160045 g RMS. Anomaly detection systems flagged acceleration as True, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 11
-Timestamp          : 2026-04-10 16:27:28.875000
-Health State       : Healthy
-Filtered Strain    : 31.2027 mV
-Filtered Distance  : 7.2100 cm
-Total RMS Accel    : 1.155804 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 11 recorded at 2026-04-10 16:31:31.913000, the bridge was classified in a 'Warning' health state. The physical sensors recorded a filtered strain of 38.6952 mV, a deck distance of 7.0589 cm, and a total vibration of 1.164994 g RMS. Anomaly detection systems flagged acceleration as True, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 12
-Timestamp          : 2026-04-10 16:27:35.421000
-Health State       : Healthy
-Filtered Strain    : 39.9213 mV
-Filtered Distance  : 7.2100 cm
-Total RMS Accel    : 1.149068 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 12 recorded at 2026-04-10 16:31:38.699000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 22.0220 mV, a deck distance of 7.1334 cm, and a total vibration of 1.157611 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 13
-Timestamp          : 2026-04-10 16:27:41.976000
-Health State       : Healthy
-Filtered Strain    : 32.2858 mV
-Filtered Distance  : 7.2100 cm
-Total RMS Accel    : 1.150588 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 13 recorded at 2026-04-10 16:31:45.325000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 49.7297 mV, a deck distance of 7.1712 cm, and a total vibration of 1.153877 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 14
-Timestamp          : 2026-04-10 16:27:48.537000
-Health State       : Healthy
-Filtered Strain    : 30.8279 mV
-Filtered Distance  : 7.2100 cm
-Total RMS Accel    : 1.156600 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 14 recorded at 2026-04-10 16:31:51.852000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 30.0260 mV, a deck distance of 7.1903 cm, and a total vibration of 1.156917 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 15
-Timestamp          : 2026-04-10 16:27:55.478000
-Health State       : Healthy
-Filtered Strain    : 27.6773 mV
-Filtered Distance  : 7.2100 cm
-Total RMS Accel    : 1.159628 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 15 recorded at 2026-04-10 16:31:58.520000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 46.5555 mV, a deck distance of 7.2000 cm, and a total vibration of 1.158459 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 16
-Timestamp          : 2026-04-10 16:28:02.023000
-Health State       : Healthy
-Filtered Strain    : 40.5416 mV
-Filtered Distance  : 7.2100 cm
-Total RMS Accel    : 1.155922 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 16 recorded at 2026-04-10 16:32:04.943000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 52.5207 mV, a deck distance of 7.2049 cm, and a total vibration of 1.159293 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 17
-Timestamp          : 2026-04-10 16:28:08.783000
-Health State       : Healthy
-Filtered Strain    : 51.8847 mV
-Filtered Distance  : 7.2100 cm
-Total RMS Accel    : 1.158691 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 17 recorded at 2026-04-10 16:32:11.732000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 26.6168 mV, a deck distance of 6.5712 cm, and a total vibration of 1.149861 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 18
-Timestamp          : 2026-04-10 16:28:15.343000
-Health State       : Warning
-Filtered Strain    : 69.6873 mV
-Filtered Distance  : 7.2100 cm
-Total RMS Accel    : 1.169964 g
-Acceleration Anomaly : True
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 18 recorded at 2026-04-10 16:32:18.513000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 49.6465 mV, a deck distance of 6.8863 cm, and a total vibration of 1.154957 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 19
-Timestamp          : 2026-04-10 16:28:22.649000
-Health State       : Warning
-Filtered Strain    : 57.0131 mV
-Filtered Distance  : 7.2100 cm
-Total RMS Accel    : 1.160909 g
-Acceleration Anomaly : True
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 19 recorded at 2026-04-10 16:32:25.785000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 46.8566 mV, a deck distance of 7.0459 cm, and a total vibration of 1.147728 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 20
-Timestamp          : 2026-04-10 16:28:29.051000
-Health State       : Warning
-Filtered Strain    : 84.3355 mV
-Filtered Distance  : 7.2199 cm
-Total RMS Accel    : 1.161297 g
-Acceleration Anomaly : True
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 20 recorded at 2026-04-10 16:32:32.432000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 71.9579 mV, a deck distance of 7.1269 cm, and a total vibration of 1.153849 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 21
-Timestamp          : 2026-04-10 16:28:35.384000
-Health State       : Healthy
-Filtered Strain    : 47.5638 mV
-Filtered Distance  : 7.2150 cm
-Total RMS Accel    : 1.151654 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 21 recorded at 2026-04-10 16:32:39.098000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 75.0366 mV, a deck distance of 7.1679 cm, and a total vibration of 1.152127 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 22
-Timestamp          : 2026-04-10 16:28:41.803000
-Health State       : Healthy
-Filtered Strain    : 26.5166 mV
-Filtered Distance  : 7.2125 cm
-Total RMS Accel    : 1.146770 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 22 recorded at 2026-04-10 16:32:45.254000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 69.3663 mV, a deck distance of 7.1886 cm, and a total vibration of 1.156092 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 23
-Timestamp          : 2026-04-10 16:28:48.294000
-Health State       : Healthy
-Filtered Strain    : 44.7770 mV
-Filtered Distance  : 7.2113 cm
-Total RMS Accel    : 1.149582 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 23 recorded at 2026-04-10 16:32:51.726000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 42.3845 mV, a deck distance of 7.1992 cm, and a total vibration of 1.158117 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 24
-Timestamp          : 2026-04-10 16:28:54.672000
-Health State       : Healthy
-Filtered Strain    : 58.8498 mV
-Filtered Distance  : 7.2107 cm
-Total RMS Accel    : 1.150919 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 24 recorded at 2026-04-10 16:32:57.938000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 45.5882 mV, a deck distance of 7.2045 cm, and a total vibration of 1.159050 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 25
-Timestamp          : 2026-04-10 16:29:01.239000
-Health State       : Healthy
-Filtered Strain    : 68.3936 mV
-Filtered Distance  : 6.7418 cm
-Total RMS Accel    : 1.155738 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 25 recorded at 2026-04-10 16:33:06.499000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 44.7999 mV, a deck distance of 7.2072 cm, and a total vibration of 1.154669 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 26
-Timestamp          : 2026-04-10 16:29:07.809000
-Health State       : Healthy
-Filtered Strain    : 37.0728 mV
-Filtered Distance  : 6.4943 cm
-Total RMS Accel    : 1.157920 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 26 recorded at 2026-04-10 16:33:14.296000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 22.7041 mV, a deck distance of 7.2086 cm, and a total vibration of 1.152451 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 27
-Timestamp          : 2026-04-10 16:29:14.358000
-Health State       : Healthy
-Filtered Strain    : 52.5386 mV
-Filtered Distance  : 7.0051 cm
-Total RMS Accel    : 1.158999 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 27 recorded at 2026-04-10 16:33:21.969000, the bridge was classified in a 'Warning' health state. The physical sensors recorded a filtered strain of 42.8448 mV, a deck distance of 7.2093 cm, and a total vibration of 1.161191 g RMS. Anomaly detection systems flagged acceleration as True, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 28
-Timestamp          : 2026-04-10 16:29:21.397000
-Health State       : Healthy
-Filtered Strain    : 67.6069 mV
-Filtered Distance  : 6.6278 cm
-Total RMS Accel    : 1.159540 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 28 recorded at 2026-04-10 16:33:28.477000, the bridge was classified in a 'Warning' health state. The physical sensors recorded a filtered strain of 26.5369 mV, a deck distance of 6.5734 cm, and a total vibration of 1.160954 g RMS. Anomaly detection systems flagged acceleration as True, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 29
-Timestamp          : 2026-04-10 16:29:27.876000
-Health State       : Healthy
-Filtered Strain    : 39.0860 mV
-Filtered Distance  : 6.4464 cm
-Total RMS Accel    : 1.154764 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 29 recorded at 2026-04-10 16:33:35.186000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 32.7332 mV, a deck distance of 6.8874 cm, and a total vibration of 1.150661 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 30
-Timestamp          : 2026-04-10 16:29:34.591000
-Health State       : Healthy
-Filtered Strain    : 55.9657 mV
-Filtered Distance  : 6.9808 cm
-Total RMS Accel    : 1.152423 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 30 recorded at 2026-04-10 16:33:41.515000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 55.1580 mV, a deck distance of 7.0465 cm, and a total vibration of 1.155340 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 31
-Timestamp          : 2026-04-10 16:29:41.188000
-Health State       : Healthy
-Filtered Strain    : 40.4168 mV
-Filtered Distance  : 6.6154 cm
-Total RMS Accel    : 1.156178 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 31 recorded at 2026-04-10 16:33:48.097000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 54.4685 mV, a deck distance of 7.1271 cm, and a total vibration of 1.152811 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 32
-Timestamp          : 2026-04-10 16:29:47.689000
-Health State       : Healthy
-Filtered Strain    : 71.1061 mV
-Filtered Distance  : 7.0665 cm
-Total RMS Accel    : 1.148189 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 32 recorded at 2026-04-10 16:33:54.308000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 42.0699 mV, a deck distance of 7.1680 cm, and a total vibration of 1.151504 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 33
-Timestamp          : 2026-04-10 16:29:54.428000
-Health State       : Healthy
-Filtered Strain    : 77.0167 mV
-Filtered Distance  : 6.6687 cm
-Total RMS Accel    : 1.154046 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 33 recorded at 2026-04-10 16:34:00.745000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 55.0710 mV, a deck distance of 7.1887 cm, and a total vibration of 1.150865 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 34
-Timestamp          : 2026-04-10 16:30:01.217000
-Health State       : Warning
-Filtered Strain    : 70.3698 mV
-Filtered Distance  : 7.0935 cm
-Total RMS Accel    : 1.166903 g
-Acceleration Anomaly : True
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 34 recorded at 2026-04-10 16:34:06.951000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 44.7821 mV, a deck distance of 6.5630 cm, and a total vibration of 1.150519 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 35
-Timestamp          : 2026-04-10 16:30:08.196000
-Health State       : Healthy
-Filtered Strain    : 93.5164 mV
-Filtered Distance  : 7.3088 cm
-Total RMS Accel    : 1.153731 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 35 recorded at 2026-04-10 16:34:13.101000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 46.8032 mV, a deck distance of 6.2459 cm, and a total vibration of 1.145531 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 36
-Timestamp          : 2026-04-10 16:30:15.332000
-Health State       : Healthy
-Filtered Strain    : 81.1435 mV
-Filtered Distance  : 7.2601 cm
-Total RMS Accel    : 1.156907 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 36 recorded at 2026-04-10 16:34:22.704000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 33.3616 mV, a deck distance of 6.0851 cm, and a total vibration of 1.147839 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 37
-Timestamp          : 2026-04-10 16:30:22.492000
-Health State       : Healthy
-Filtered Strain    : 84.5153 mV
-Filtered Distance  : 7.2354 cm
-Total RMS Accel    : 1.153601 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 37 recorded at 2026-04-10 16:34:28.916000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 33.7800 mV, a deck distance of 6.6399 cm, and a total vibration of 1.153942 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 38
-Timestamp          : 2026-04-10 16:30:29.668000
-Health State       : Healthy
-Filtered Strain    : 98.2733 mV
-Filtered Distance  : 7.2327 cm
-Total RMS Accel    : 1.142068 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 38 recorded at 2026-04-10 16:34:36.654000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 36.4039 mV, a deck distance of 6.2849 cm, and a total vibration of 1.152105 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 39
-Timestamp          : 2026-04-10 16:30:37.238000
-Health State       : Healthy
-Filtered Strain    : 61.8578 mV
-Filtered Distance  : 7.2215 cm
-Total RMS Accel    : 1.150947 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 39 recorded at 2026-04-10 16:34:43.029000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 71.4842 mV, a deck distance of 6.7411 cm, and a total vibration of 1.146243 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 40
-Timestamp          : 2026-04-10 16:30:44.231000
-Health State       : Healthy
-Filtered Strain    : 55.4570 mV
-Filtered Distance  : 7.2158 cm
-Total RMS Accel    : 1.155507 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 40 recorded at 2026-04-10 16:34:49.384000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 77.2083 mV, a deck distance of 6.3411 cm, and a total vibration of 1.153134 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 41
-Timestamp          : 2026-04-10 16:30:50.985000
-Health State       : Healthy
-Filtered Strain    : 40.1590 mV
-Filtered Distance  : 8.0070 cm
-Total RMS Accel    : 1.152888 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 41 recorded at 2026-04-10 16:34:55.792000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 84.9279 mV, a deck distance of 6.7696 cm, and a total vibration of 1.156691 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 42
-Timestamp          : 2026-04-10 16:30:57.748000
-Health State       : Healthy
-Filtered Strain    : 46.8672 mV
-Filtered Distance  : 7.6139 cm
-Total RMS Accel    : 1.156500 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 42 recorded at 2026-04-10 16:35:02.467000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 69.5555 mV, a deck distance of 6.9868 cm, and a total vibration of 1.153728 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 43
-Timestamp          : 2026-04-10 16:31:04.271000
-Health State       : Warning
-Filtered Strain    : 43.0363 mV
-Filtered Distance  : 7.4147 cm
-Total RMS Accel    : 1.163263 g
-Acceleration Anomaly : True
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 43 recorded at 2026-04-10 16:35:08.870000, the bridge was classified in a 'Warning' health state. The physical sensors recorded a filtered strain of 37.6617 mV, a deck distance of 7.0969 cm, and a total vibration of 1.171702 g RMS. Anomaly detection systems flagged acceleration as True, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 44
-Timestamp          : 2026-04-10 16:31:11.233000
-Health State       : Warning
-Filtered Strain    : 67.6100 mV
-Filtered Distance  : 7.3137 cm
-Total RMS Accel    : 1.161760 g
-Acceleration Anomaly : True
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 44 recorded at 2026-04-10 16:35:17.612000, the bridge was classified in a 'Warning' health state. The physical sensors recorded a filtered strain of 43.1947 mV, a deck distance of 6.5164 cm, and a total vibration of 1.166141 g RMS. Anomaly detection systems flagged acceleration as True, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 45
-Timestamp          : 2026-04-10 16:31:17.893000
-Health State       : Warning
-Filtered Strain    : 65.6026 mV
-Filtered Distance  : 6.6263 cm
-Total RMS Accel    : 1.160925 g
-Acceleration Anomaly : True
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 45 recorded at 2026-04-10 16:35:25.439000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 43.5870 mV, a deck distance of 6.8585 cm, and a total vibration of 1.143603 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 46
-Timestamp          : 2026-04-10 16:31:24.353000
-Health State       : Warning
-Filtered Strain    : 57.3548 mV
-Filtered Distance  : 6.9142 cm
-Total RMS Accel    : 1.160434 g
-Acceleration Anomaly : True
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 46 recorded at 2026-04-10 16:35:32.750000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 31.7316 mV, a deck distance of 7.0319 cm, and a total vibration of 1.146856 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 47
-Timestamp          : 2026-04-10 16:31:31.913000
-Health State       : Warning
-Filtered Strain    : 38.7090 mV
-Filtered Distance  : 7.0601 cm
-Total RMS Accel    : 1.165191 g
-Acceleration Anomaly : True
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 47 recorded at 2026-04-10 16:35:39.279000, the bridge was classified in a 'Healthy' health state. The physical sensors recorded a filtered strain of 54.6504 mV, a deck distance of 7.1197 cm, and a total vibration of 1.148511 g RMS. Anomaly detection systems flagged acceleration as False, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 48
-Timestamp          : 2026-04-10 16:31:38.699000
-Health State       : Healthy
-Filtered Strain    : 22.0291 mV
-Filtered Distance  : 7.1340 cm
-Total RMS Accel    : 1.157711 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 48 recorded at 2026-04-10 16:35:45.765000, the bridge was classified in a 'Warning' health state. The physical sensors recorded a filtered strain of 63.8535 mV, a deck distance of 7.1643 cm, and a total vibration of 1.164246 g RMS. Anomaly detection systems flagged acceleration as True, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 49
-Timestamp          : 2026-04-10 16:31:45.325000
-Health State       : Healthy
-Filtered Strain    : 49.7333 mV
-Filtered Distance  : 7.1715 cm
-Total RMS Accel    : 1.153927 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 49 recorded at 2026-04-10 16:35:52.008000, the bridge was classified in a 'Warning' health state. The physical sensors recorded a filtered strain of 37.1838 mV, a deck distance of 7.1868 cm, and a total vibration of 1.162307 g RMS. Anomaly detection systems flagged acceleration as True, strain as False, and distance as False.
 ---
-Bridge Sensor Report — Window 50
-Timestamp          : 2026-04-10 16:31:51.852000
-Health State       : Healthy
-Filtered Strain    : 30.0278 mV
-Filtered Distance  : 7.1905 cm
-Total RMS Accel    : 1.156943 g
-Acceleration Anomaly : False
-Strain Anomaly       : False
-Distance Anomaly     : False
+During monitoring window 50 recorded at 2026-04-10 16:35:58.505000, the bridge was classified in a 'Warning' health state. The physical sensors recorded a filtered strain of 38.1289 mV, a deck distance of 7.1982 cm, and a total vibration of 1.161437 g RMS. Anomaly detection systems flagged acceleration as True, strain as False, and distance as False.
 ---
