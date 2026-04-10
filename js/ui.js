@@ -13,7 +13,7 @@ function buildSensorCards() {
     }
 
     const typeLabel = s.type === 'accelerometer' ? '⟳ Accel' : '⊕ Strain';
-    const unit      = s.type === 'accelerometer' ? 'g' : 'με';
+    const unit      = s.type === 'accelerometer' ? 'g' : 'mv';
 
     slot.innerHTML = `
       <div class="strip-header">
