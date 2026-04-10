@@ -1,1 +1,14 @@
 .env
+# Python cache
+**/__pycache__/
+*.pyc
+
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# Data & Databases
+data/vector_store/
+*.sqlite3
+*.bin

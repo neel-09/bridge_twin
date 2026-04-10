@@ -61,10 +61,14 @@ class VectorStore:
     def __init__(
         self,
         collection_name:   str = "bridge_sensor_data",
-        persist_directory: str = "../data/vector_store"
+        persist_directory: str = None   # changed to None — resolved below
     ):
-        self.collection_name   = collection_name
-        self.persist_directory = persist_directory
+        # Resolve absolute path relative to this file's location
+        if persist_directory is None:
+            base = os.path.dirname(os.path.abspath(__file__))
+            persist_directory = os.path.join(base, "..", "data", "vector_store")
+        
+        self.persist_directory = os.path.abspath(persist_directory)
         self.client            = None
         self.collection        = None
         self._initialize_store()

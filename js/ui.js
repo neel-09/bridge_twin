@@ -4,6 +4,7 @@ const modeFreqs = CONFIG.MODE_FREQS;
 const startTime = Date.now();
 
 // ── BUILD STRIP CARDS (called once at init) ───────────────
+// ── BUILD STRIP CARDS (called once at init) ───────────────
 function buildSensorCards() {
   sensorData.forEach(s => {
     const slot = document.getElementById(`strip-${s.id}`);
@@ -12,8 +13,15 @@ function buildSensorCards() {
       return;
     }
 
-    const typeLabel = s.type === 'accelerometer' ? '⟳ Accel' : '⊕ Strain';
-    const unit      = s.type === 'accelerometer' ? 'g' : 'mv';
+    // ── CUSTOM LOGIC FOR S3 (Ultrasonic) ──────────────────
+    let typeLabel = s.type === 'accelerometer' ? '⟳ Accel' : '⊕ Strain';
+    let unit      = s.type === 'accelerometer' ? 'g' : 'mv';
+
+    if (s.id === 'S3') {
+      typeLabel = '📡 Dist'; // Ultrasonic label
+      unit      = 'cm';      // Your requested unit
+    }
+    // ──────────────────────────────────────────────────────
 
     slot.innerHTML = `
       <div class="strip-header">
